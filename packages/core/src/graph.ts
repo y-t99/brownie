@@ -58,7 +58,7 @@ export async function webResearch(
   tools: { [ToolName.SearchTool]: Tool<any, SerpSearchOrganicResult[]> }
 ) {
   const tasks = state.queries[state.queries.length - 1].queries.map(
-    async (item, idx) => {
+    async (item) => {
       const formattedPrompt = format(WEB_SEARCHER_INSTRUCTIONS, {
         current_date: getCurrentDate(),
         research_topic: item,
@@ -77,8 +77,7 @@ export async function webResearch(
 
       return {
         sourcesGathered,
-        searchQuery: [item],
-        webResearchResult: [modifiedText],
+        webResearchResult: modifiedText,
       };
     }
   );
@@ -98,12 +97,11 @@ export async function reflection(
    * the follow-up query in JSON format.
    */
 
-  // Format the prompt
   const currentDate = getCurrentDate();
   const formattedPrompt = format(REFLECTION_INSTRUCTIONS, {
     current_date: currentDate,
     research_topic: getResearchTopic(state.messages),
-    summaries: state.webResearchResult.join("\n\n---\n\n"),
+    summaries: state.webResearchResults.join("\n\n---\n\n"),
   });
 
   const { object } = await generateObject({
@@ -134,7 +132,7 @@ export async function finalizeAnswer(
   const formattedPrompt = format(ANSWER_INSTRUCTIONS, {
     current_date: currentDate,
     research_topic: getResearchTopic(state.messages),
-    summaries: state.webResearchResult.join("\n---\n\n"),
+    summaries: state.webResearchResults.join("\n---\n\n"),
   });
 
   const result = await generateText({
@@ -146,7 +144,6 @@ export async function finalizeAnswer(
 
   return {
     message: result.text,
-    sourcesGathered: state.sourcesGathered,
   };
 }
 
@@ -159,8 +156,8 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
         // research context
         messages: [],
         searchQueries: [],
-        webResearchResult: [],
-        sourcesGathered: [],
+        webResearchResults: [],
+        sourcesGathereds: [],
         initialSearchQueryCount: config.numberOfInitialQueries,
         maxResearchLoops: config.maxResearchLoops,
         researchLoopCount: 0,
@@ -196,8 +193,7 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
             onDone: {
               target: "webSearch",
               actions: assign({
-                // todo: rationale ?
-                queries: ({ event }) => event.output.queries,
+                queries: ({ event }) => event.output,
                 searchQueries: ({ event }) => event.output.queries,
               }),
             },
@@ -212,13 +208,22 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
             id: "webSearch",
             src: "webResearchService",
             input: ({ context }) => ({
-              queries: context.queries,
+              state: { queries: context.queries },
               model: config.queryGeneratorModel,
               tools: config.tools,
             }),
             onDone: {
               target: "reflecting",
-              actions: assign({}),
+              actions: assign({
+                webResearchResults: ({ context, event }) => [
+                  ...context.webResearchResults,
+                  event.output.webResearchResult,
+                ],
+                sourcesGathereds: ({ context, event }) => [
+                  ...context.sourcesGathereds,
+                  ...event.output.sourcesGathered,
+                ],
+              }),
             },
             onError: {
               target: "failed",
@@ -260,7 +265,13 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
               {
                 target: "webSearching",
                 actions: assign({
-                  queries: ({ event }) => event.output.followUpQueries,
+                  queries: ({ context, event }) => [
+                    ...context.queries,
+                    {
+                      queries: event.output.followUpQueries,
+                      rationale: event.output.knowledge_gap,
+                    },
+                  ],
                   searchQueries: ({ context, event }) => [
                     ...context.searchQueries,
                     ...event.output.followUpQueries,
@@ -294,7 +305,6 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
                     content: event.output.message,
                   } as CoreAssistantMessage,
                 ],
-                sourcesGathered: ({ event }) => event.output.sourcesGathered,
               }),
             },
             onError: {

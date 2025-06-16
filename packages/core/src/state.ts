@@ -4,8 +4,8 @@ import { SearchQueries } from "./tools";
 export interface ResearchMachineContext {
   messages: CoreMessage[];
   searchQueries: string[];
-  webResearchResult: string[];
-  sourcesGathered: {
+  webResearchResults: string[];
+  sourcesGathereds: {
     title: string;
     link: string;
     snippet: string;
