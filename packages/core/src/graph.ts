@@ -12,7 +12,11 @@ import {
   REFLECTION_INSTRUCTIONS,
   WEB_SEARCHER_INSTRUCTIONS,
 } from "./prompt";
-import { QueryGenerationContext, ResearchMachineContext } from "./state";
+import {
+  QueryGenerationContext,
+  ResearchEvent,
+  ResearchMachineContext,
+} from "./state";
 import {
   reflectionSchema,
   searchQueriesSchema,
@@ -168,7 +172,7 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
       },
       types: {
         context: {} as ResearchMachineContext & QueryGenerationContext,
-        // events: {} as ResearchEvent,
+        events: {} as ResearchEvent,
       },
       states: {
         idle: {
@@ -248,7 +252,10 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
                */
               {
                 target: "finalizingAnswer",
-                guard: "isResearchSufficient",
+                guard: {
+                  type: "isResearchSufficient",
+                  params: ({ event }) => event.output.isSufficient,
+                },
                 actions: assign({
                   researchLoopCount: ({ context }) =>
                     context.researchLoopCount + 1,
@@ -384,8 +391,12 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
         ),
       },
       guards: {
-        isResearchSufficient: ({ event }) => {
-          return event.output?.isSufficient === true;
+        isResearchSufficient: (_, params) => {
+          return params &&
+            "isSufficient" in params &&
+            params.isSufficient === true
+            ? true
+            : false;
         },
         hasReachedMaxLoops: ({ context }) => {
           return context.researchLoopCount >= context.maxResearchLoops;
