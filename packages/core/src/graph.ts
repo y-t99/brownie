@@ -3,7 +3,9 @@ import {
   generateObject,
   generateText,
   LanguageModel,
+  Schema,
   Tool,
+  ToolResult,
 } from "ai";
 import {
   ANSWER_INSTRUCTIONS,
@@ -21,6 +23,8 @@ import {
   reflectionSchema,
   searchQueriesSchema,
   SerpSearchOrganicResult,
+  SerpSearchParams,
+  serpSearchParamsSchema,
   ToolName,
 } from "./tools";
 import {
@@ -59,7 +63,9 @@ export async function generateQueries(
 export async function webResearch(
   state: QueryGenerationContext,
   languageModel: LanguageModel,
-  tools: { [ToolName.SearchTool]: Tool<any, SerpSearchOrganicResult[]> }
+  tools: {
+    [ToolName.SearchTool]: Tool;
+  }
 ) {
   const tasks = state.queries[state.queries.length - 1].queries.map(
     async (item) => {
@@ -68,15 +74,57 @@ export async function webResearch(
         research_topic: item,
       });
 
-      const response = await generateText({
+      const searchStep = await generateText({
         model: languageModel,
         prompt: formattedPrompt,
         tools,
       });
 
+      const parts = [];
+
+      if (searchStep.reasoning) {
+        parts.push({
+          type: "reasoning" as const,
+          reasoning: searchStep.reasoning,
+          details: searchStep.reasoningDetails,
+        });
+      }
+
+      if (searchStep.toolResults) {
+        searchStep.toolResults.forEach(
+          (toolResult: ToolResult<string, unknown, unknown>) => {
+            parts.push({
+              type: "tool-invocation" as const,
+              toolInvocation: {
+                state: "result" as const,
+                toolCallId: toolResult.toolCallId,
+                toolName: toolResult.toolName,
+                args: toolResult.args,
+                result: toolResult.result,
+              },
+            });
+          }
+        );
+      }
+
+      const responseStep = await generateText({
+        model: languageModel,
+        messages: [
+          {
+            role: "user",
+            content: formattedPrompt,
+          },
+          {
+            role: "assistant",
+            content: searchStep.text,
+            parts,
+          },
+        ],
+      });
+
       // Gets the citations and adds them to the generated text
-      const citations = getCitations(response.toolResults);
-      const modifiedText = insertCitationMarkers(response.text, citations);
+      const citations = getCitations(searchStep.toolResults);
+      const modifiedText = insertCitationMarkers(responseStep.text, citations);
       const sourcesGathered = citations;
 
       return {

@@ -1,6 +1,6 @@
 import { tool } from "ai";
 import axios from "axios";
-import z from "zod";
+import z, { Schema } from "zod";
 
 export const searchQueriesSchema = z.object({
   queries: z.array(z.string()),
@@ -17,7 +17,7 @@ export const reflectionSchema = z.object({
 
 export type Reflection = z.infer<typeof reflectionSchema>;
 
-const serpSearchParamsSchema = z.object({
+export const serpSearchParamsSchema = z.object({
   q: z.string(),
   start: z.number().optional(),
   num: z.number().optional(),
@@ -37,14 +37,14 @@ export type SerpSearchOrganicResult = z.infer<
 >;
 
 export function serpSearchApiTool(apiKey: string) {
-  return tool({
+  return tool<Schema<SerpSearchParams>, SerpSearchOrganicResult[]>({
     description:
       "API endpoint allows you to scrape the results from Google search engine via SerpApi service.",
     parameters: serpSearchParamsSchema,
-    execute: async ({ q, start, num }: SerpSearchParams) => {
+    execute: async ({ q, start, num }) => {
       try {
-        const baseUrl = "https://serpapi.com/search.json";
-        const response = await axios.get(baseUrl, {
+        const url = "https://serpapi.com/search.json";
+        const response = await axios.get(url, {
           params: {
             engine: "google",
             q,
@@ -56,11 +56,14 @@ export function serpSearchApiTool(apiKey: string) {
         const organicResults = response.data
           ?.organic_results as SerpSearchOrganicResult[];
         return organicResults.map((result) => ({
+          position: result.position,
           title: result.title,
           link: result.link,
           snippet: result.snippet,
         }));
-      } catch (_) {}
+      } catch (_) {
+        return [];
+      }
     },
   });
 }
