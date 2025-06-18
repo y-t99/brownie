@@ -3,10 +3,12 @@ import {
   generateObject,
   generateText,
   LanguageModel,
-  Schema,
   Tool,
   ToolResult,
 } from "ai";
+import { assign, createMachine, fromPromise } from "xstate";
+
+import { ResearchConfiguration } from "./configuration";
 import {
   ANSWER_INSTRUCTIONS,
   getCurrentDate,
@@ -19,22 +21,13 @@ import {
   ResearchEvent,
   ResearchMachineContext,
 } from "./state";
-import {
-  reflectionSchema,
-  searchQueriesSchema,
-  SerpSearchOrganicResult,
-  SerpSearchParams,
-  serpSearchParamsSchema,
-  ToolName,
-} from "./tools";
+import { reflectionSchema, searchQueriesSchema, ToolName } from "./tools";
 import {
   format,
   getCitations,
   getResearchTopic,
   insertCitationMarkers,
 } from "./utils";
-import { assign, createMachine, fromPromise } from "xstate";
-import { ResearchConfiguration } from "./configuration";
 
 export async function generateQueries(
   state: ResearchMachineContext,
@@ -67,7 +60,7 @@ export async function webResearch(
     [ToolName.SearchTool]: Tool;
   }
 ) {
-  const tasks = state.queries[state.queries.length - 1].queries.map(
+  const tasks = state.queries[state.queries.length - 1]!.queries.map(
     async (item) => {
       const formattedPrompt = format(WEB_SEARCHER_INSTRUCTIONS, {
         current_date: getCurrentDate(),
@@ -90,7 +83,7 @@ export async function webResearch(
         });
       }
 
-      if (searchStep.toolResults) {
+      if (searchStep.toolResults && searchStep.toolResults.length > 0) {
         searchStep.toolResults.forEach(
           (toolResult: ToolResult<string, unknown, unknown>) => {
             parts.push({

@@ -1,15 +1,15 @@
 import { CoreMessage } from "ai";
-import z from "zod";
+
 import { SerpSearchOrganicResult, ToolName } from "./tools";
 
 export function format(template: string, params: Record<string, string>) {
-  return template.replace(/\{(\w+)\}/g, (_, key) => params[key]);
+  return template.replace(/\{(\w+)\}/g, (_, key) => params[key]!);
 }
 
 export function getResearchTopic(messages: CoreMessage[]) {
   let researchTopic: string = "";
   if (messages.length === 1) {
-    const message = messages[messages.length - 1];
+    const message = messages[messages.length - 1]!;
     if (typeof message.content === "string") {
       researchTopic = message.content;
     }
@@ -28,7 +28,7 @@ export function getResearchTopic(messages: CoreMessage[]) {
   return researchTopic;
 }
 
-interface Citation {
+export interface Citation {
   title: string;
   link: string;
   snippet?: string;

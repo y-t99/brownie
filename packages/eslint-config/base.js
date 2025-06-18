@@ -3,6 +3,8 @@ import eslintConfigPrettier from "eslint-config-prettier";
 import turboPlugin from "eslint-plugin-turbo";
 import tseslint from "typescript-eslint";
 import onlyWarn from "eslint-plugin-only-warn";
+import importPlugin from "eslint-plugin-import";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 
 /**
  * A shared ESLint configuration for the repository.
@@ -24,6 +26,22 @@ export const config = [
   {
     plugins: {
       onlyWarn,
+    },
+  },
+  {
+    plugins: {
+      import: importPlugin,
+      "simple-import-sort": simpleImportSort,
+    },
+    rules: {
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+
+      "import/first": "error",
+      "import/newline-after-import": "error",
+      "import/no-duplicates": "error",
+      "import/no-unresolved": "off",
+      "import/order": "off",
     },
   },
   {

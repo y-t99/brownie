@@ -13,6 +13,6 @@ export default defineConfig({
       DEEPSEEK_BASE_URL: process.env.DEEPSEEK_BASE_URL,
       SERP_API_KEY: process.env.SERP_API_KEY,
     },
-    testTimeout: 60000,
+    testTimeout: 1000 * 60 * 10,
   },
 });

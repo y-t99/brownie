@@ -1,11 +1,12 @@
 import { createDeepSeek } from "@ai-sdk/deepseek";
-import { describe, it, expect } from "vitest";
-import { serpSearchApiTool, ToolName } from "./tools";
+import { describe, expect,it } from "vitest";
+
 import { webResearch } from "./graph";
 import { QueryGenerationContext } from "./state";
+import { serpSearchApiTool, ToolName } from "./tools";
 
 describe("test web research", () => {
-  it("should find the capital of France with deepseek", async () => {
+  it.only("should find the capital of France", async () => {
     const state = {
       queries: [
         {

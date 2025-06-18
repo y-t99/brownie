@@ -1,4 +1,5 @@
 import { LanguageModel, Tool } from "ai";
+
 import { SerpSearchOrganicResult, ToolName } from "./tools";
 
 export interface ResearchConfiguration {
