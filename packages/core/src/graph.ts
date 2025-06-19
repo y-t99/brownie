@@ -23,6 +23,7 @@ import {
 } from "./state";
 import { reflectionSchema, searchQueriesSchema, ToolName } from "./tools";
 import {
+  Citation,
   format,
   getCitations,
   getResearchTopic,
@@ -33,7 +34,6 @@ export async function generateQueries(
   state: ResearchMachineContext,
   languageModel: LanguageModel
 ) {
-  // Format the prompt
   const currentDate = getCurrentDate();
   const formattedPrompt = format(QUERY_WRITER_INSTRUCTIONS, {
     current_date: currentDate,
@@ -41,7 +41,6 @@ export async function generateQueries(
     number_queries: state.initialSearchQueryCount.toString(),
   });
 
-  // Generate the search queries
   const { object } = await generateObject({
     model: languageModel,
     temperature: 1,
@@ -53,13 +52,19 @@ export async function generateQueries(
   return object;
 }
 
+interface WebResearchResult {
+  sourcesGathered: Citation[];
+  webResearchResult: string;
+}
+
+// todo: skip error
 export async function webResearch(
   state: QueryGenerationContext,
   languageModel: LanguageModel,
   tools: {
     [ToolName.SearchTool]: Tool;
   }
-) {
+): Promise<WebResearchResult[]> {
   const tasks = state.queries[state.queries.length - 1]!.queries.map(
     async (item) => {
       const formattedPrompt = format(WEB_SEARCHER_INSTRUCTIONS, {
@@ -118,16 +123,17 @@ export async function webResearch(
       // Gets the citations and adds them to the generated text
       const citations = getCitations(searchStep.toolResults);
       const modifiedText = insertCitationMarkers(responseStep.text, citations);
-      const sourcesGathered = citations;
 
       return {
-        sourcesGathered,
+        sourcesGathered: citations,
         webResearchResult: modifiedText,
       };
     }
   );
 
   const results = await Promise.all(tasks);
+
+  console.log(JSON.stringify(results, null, 2));
 
   return results;
 }
@@ -262,11 +268,15 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
               actions: assign({
                 webResearchResults: ({ context, event }) => [
                   ...context.webResearchResults,
-                  event.output.webResearchResult,
+                  ...event.output.map(
+                    (item: WebResearchResult) => item.webResearchResult
+                  ),
                 ],
                 sourcesGathereds: ({ context, event }) => [
                   ...context.sourcesGathereds,
-                  ...event.output.sourcesGathered,
+                  ...event.output
+                    .map((item: WebResearchResult) => item.sourcesGathered)
+                    .flatMap((item: Citation[]) => item),
                 ],
               }),
             },
