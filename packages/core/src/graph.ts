@@ -57,7 +57,6 @@ interface WebResearchResult {
   webResearchResult: string;
 }
 
-// todo: skip error
 export async function webResearch(
   state: QueryGenerationContext,
   languageModel: LanguageModel,
@@ -132,8 +131,6 @@ export async function webResearch(
   );
 
   const results = await Promise.all(tasks);
-
-  console.log(JSON.stringify(results, null, 2));
 
   return results;
 }
@@ -239,13 +236,13 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
             src: "queryGenerationService",
             input: ({ context }) => ({
               state: context,
-              model: context.queryGeneratorModel,
+              model: config.queryGeneratorModel,
             }),
             onDone: {
-              target: "webSearch",
+              target: "webSearching",
               actions: assign({
-                queries: ({ event }) => event.output,
-                searchQueries: ({ event }) => event.output.queries,
+                queries: ({ context, event }) => [...context.queries, event.output],
+                searchQueries: ({ context, event }) => [...context.searchQueries, event.output.queries],
               }),
             },
             onError: {
@@ -281,7 +278,7 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
               }),
             },
             onError: {
-              target: "failed",
+              target: "error",
             },
           },
         },
@@ -292,7 +289,7 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
             src: "reflectionService",
             input: ({ context }) => ({
               state: context,
-              languageModel: config.reflectionModel,
+              model: config.reflectionModel,
             }),
             onDone: [
               /*
@@ -340,7 +337,7 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
               },
             ],
             onError: {
-              target: "failed",
+              target: "error",
             },
           },
         },
@@ -351,7 +348,7 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
             src: "answerFinalizationService",
             input: ({ context }) => ({
               state: context,
-              languageModel: config.answerModel,
+              model: config.answerModel,
             }),
             onDone: {
               target: "completed",
@@ -388,10 +385,10 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
           }: {
             input: {
               state: ResearchMachineContext;
-              languageModel: LanguageModel;
+              model: LanguageModel;
             };
           }) => {
-            return generateQueries(input.state, input.languageModel);
+            return generateQueries(input.state, input.model);
           }
         ),
 
@@ -400,14 +397,14 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
             input,
           }: {
             input: {
-              context: QueryGenerationContext;
-              languageModel: LanguageModel;
+              state: QueryGenerationContext;
+              model: LanguageModel;
               tools: {
                 [ToolName.SearchTool]: Tool;
               };
             };
           }) => {
-            return webResearch(input.context, input.languageModel, input.tools);
+            return webResearch(input.state, input.model, input.tools);
           }
         ),
 
@@ -417,10 +414,10 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
           }: {
             input: {
               state: ResearchMachineContext;
-              languageModel: LanguageModel;
+              model: LanguageModel;
             };
           }) => {
-            return reflection(input.state, input.languageModel);
+            return reflection(input.state, input.model);
           }
         ),
 
@@ -430,12 +427,12 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
           }: {
             input: {
               state: ResearchMachineContext;
-              languageModel: LanguageModel;
+              model: LanguageModel;
             };
           }) => {
             const finalAnswer = await finalizeAnswer(
               input.state,
-              input.languageModel
+              input.model
             );
             return finalAnswer;
           }

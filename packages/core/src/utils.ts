@@ -1,4 +1,4 @@
-import { CoreMessage } from "ai";
+import { CoreMessage, ToolResult } from "ai";
 
 import { SerpSearchOrganicResult, ToolName } from "./tools";
 
@@ -35,12 +35,12 @@ export interface Citation {
 }
 
 export function getCitations(
-  toolResults: { tool: string; input: unknown; output: unknown }[]
+  toolResults: ToolResult<string, unknown, unknown>[]
 ) {
   const citations: Citation[] = [];
   for (const toolResult of toolResults) {
-    if (toolResult.tool === ToolName.SearchTool) {
-      const output = toolResult.output as SerpSearchOrganicResult[];
+    if (toolResult.toolName === ToolName.SearchTool) {
+      const output = toolResult.result as SerpSearchOrganicResult[];
       for (const result of output) {
         citations.push({
           title: result.title,

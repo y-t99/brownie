@@ -1,6 +1,4 @@
-import { LanguageModel, Tool } from "ai";
-
-import { SerpSearchOrganicResult, ToolName } from "./tools";
+import { LanguageModel } from "ai";
 
 export interface ResearchConfiguration {
   queryGeneratorModel: LanguageModel;
@@ -8,5 +6,5 @@ export interface ResearchConfiguration {
   answerModel: LanguageModel;
   numberOfInitialQueries: number;
   maxResearchLoops: number;
-  tools: { [ToolName.SearchTool]: Tool<any, SerpSearchOrganicResult[]> };
+  tools: Record<string, unknown>;
 }

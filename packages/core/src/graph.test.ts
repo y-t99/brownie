@@ -1,14 +1,24 @@
+import { createAzure } from "@ai-sdk/azure";
 import { createDeepSeek } from "@ai-sdk/deepseek";
 import { describe, expect, it } from "vitest";
 
 import {
+  createResearchAgentMachine,
   finalizeAnswer,
   generateQueries,
   reflection,
   webResearch,
 } from "./graph";
 import { QueryGenerationContext, ResearchMachineContext } from "./state";
-import { serpSearchApiTool, ToolName } from "./tools";
+import {
+  serpSearchApiTool,
+  SerpSearchOrganicResult,
+  SerpSearchParams,
+  ToolName,
+} from "./tools";
+import { ResearchConfiguration } from "./configuration";
+import { Schema, Tool } from "ai";
+import { createActor, toPromise } from "xstate";
 
 describe("test query generation", () => {
   it.only("should generate queries", async () => {
@@ -45,16 +55,17 @@ describe("test web research", () => {
       ],
     } as QueryGenerationContext;
 
-    const provider = createDeepSeek({
-      baseURL: process.env.DEEPSEEK_BASE_URL,
-      apiKey: process.env.DEEPSEEK_API_KEY,
+    const provider = createAzure({
+      resourceName: process.env.AZURE_RESOURCE_NAME!,
+      apiKey: process.env.AZURE_API_KEY!,
+      apiVersion: process.env.AZURE_GPT_4o_API_VERSION!,
     });
 
     const tools = {
       [ToolName.SearchTool]: serpSearchApiTool(process.env.SERP_API_KEY!),
     };
 
-    const languageModel = provider(process.env.DEEPSEEK_MODEL!);
+    const languageModel = provider(process.env.AZURE_GPT_4o!);
 
     const results = await webResearch(state, languageModel, tools);
 
@@ -176,5 +187,51 @@ describe("test finalizeAnswer", () => {
      */
 
     expect(results).toBeDefined();
+  });
+});
+
+describe("test agent", () => {
+  it.only("should generate agent state", async () => {
+    const provider = createAzure({
+      resourceName: process.env.AZURE_RESOURCE_NAME!,
+      apiKey: process.env.AZURE_API_KEY!,
+      apiVersion: process.env.AZURE_GPT_4o_API_VERSION!,
+    });
+
+    const languageModel = provider(process.env.AZURE_GPT_4o!);
+
+    const machine = createResearchAgentMachine({
+      queryGeneratorModel: languageModel,
+      reflectionModel: languageModel,
+      answerModel: languageModel,
+      numberOfInitialQueries: 3,
+      maxResearchLoops: 1,
+      tools: {
+        [ToolName.SearchTool]: serpSearchApiTool(process.env.SERP_API_KEY!),
+      },
+    });
+
+    const actor = createActor(machine);
+
+    await new Promise<void>((resolve, reject) => {
+      const subscription = actor.subscribe((snapshot) => {
+        if (snapshot.status === "done") {
+          subscription.unsubscribe();
+          resolve();
+        }
+      });
+
+      actor.start();
+
+      actor.send({
+        type: "START_RESEARCH",
+        messages: [
+          {
+            role: "user",
+            content: "I want to know about France.",
+          },
+        ],
+      });
+    });
   });
 });
