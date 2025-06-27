@@ -1,4 +1,5 @@
-import { LanguageModel } from "ai";
+import { LanguageModel, Tool } from "ai";
+import { ToolName } from "./tools";
 
 export interface ResearchConfiguration {
   queryGeneratorModel: LanguageModel;
@@ -6,5 +7,5 @@ export interface ResearchConfiguration {
   answerModel: LanguageModel;
   numberOfInitialQueries: number;
   maxResearchLoops: number;
-  tools: Record<string, unknown>;
+  tools: Record<ToolName, Tool>;
 }

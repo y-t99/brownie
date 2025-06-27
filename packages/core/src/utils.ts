@@ -35,7 +35,7 @@ export interface Citation {
 }
 
 export function getCitations(
-  toolResults: ToolResult<string, unknown, unknown>[]
+  toolResults: ToolResult<string, unknown, unknown>[],
 ) {
   const citations: Citation[] = [];
   for (const toolResult of toolResults) {

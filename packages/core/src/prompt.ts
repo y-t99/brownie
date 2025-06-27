@@ -45,7 +45,7 @@ Instructions:
 
 Research Topic:
 {research_topic}
-`
+`;
 
 export const REFLECTION_INSTRUCTIONS = `You are an expert research assistant analyzing summaries about "{research_topic}".
 

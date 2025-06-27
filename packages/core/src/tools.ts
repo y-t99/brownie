@@ -9,14 +9,6 @@ export const searchQueriesSchema = z.object({
 
 export type SearchQueries = z.infer<typeof searchQueriesSchema>;
 
-export const reflectionSchema = z.object({
-  is_sufficient: z.boolean(),
-  knowledge_gap: z.string(),
-  follow_up_queries: z.array(z.string()),
-});
-
-export type Reflection = z.infer<typeof reflectionSchema>;
-
 export const serpSearchParamsSchema = z.object({
   q: z.string(),
   start: z.number().optional(),

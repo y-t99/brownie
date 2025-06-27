@@ -1,16 +1,14 @@
 import { CoreMessage, CoreUserMessage, LanguageModel } from "ai";
 
 import { SearchQueries } from "./tools";
+import { Citation } from "./utils";
 
 export interface ResearchMachineContext {
   messages: CoreMessage[];
+  queries: SearchQueries[];
   searchQueries: string[];
   webResearchResults: string[];
-  sourcesGathereds: {
-    title: string;
-    link: string;
-    snippet: string;
-  }[];
+  sourcesGathereds: Citation[];
   initialSearchQueryCount: number;
   maxResearchLoops: number;
   researchLoopCount: number;
@@ -25,10 +23,6 @@ export interface ReflectionMachineContext {
   followUpQueries: unknown[];
   researchLoopCount: number;
   numberOfRanQueries: number;
-}
-
-export interface QueryGenerationContext {
-  queries: SearchQueries[];
 }
 
 export interface WebSearchContext {

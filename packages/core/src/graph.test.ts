@@ -2,14 +2,8 @@ import { createAzure } from "@ai-sdk/azure";
 import { createDeepSeek } from "@ai-sdk/deepseek";
 import { describe, expect, it } from "vitest";
 
-import {
-  createResearchAgentMachine,
-  finalizeAnswer,
-  generateQueries,
-  reflection,
-  webResearch,
-} from "./graph";
-import { QueryGenerationContext, ResearchMachineContext } from "./state";
+import { createResearchAgentMachine } from "./graph";
+import { ResearchMachineContext } from "./state";
 import {
   serpSearchApiTool,
   SerpSearchOrganicResult,
@@ -19,6 +13,8 @@ import {
 import { ResearchConfiguration } from "./configuration";
 import { Schema, Tool } from "ai";
 import { createActor, toPromise } from "xstate";
+import { answer, generateQueries, reflection, webResearch } from "./actor";
+import { stat } from "fs";
 
 describe("test query generation", () => {
   it.only("should generate queries", async () => {
@@ -33,7 +29,11 @@ describe("test query generation", () => {
 
     const languageModel = provider(process.env.DEEPSEEK_MODEL!);
 
-    const queries = await generateQueries(state, languageModel);
+    const queries = await generateQueries({
+      messages: state.messages,
+      numberQueries: state.initialSearchQueryCount,
+      languageModel,
+    });
 
     expect(queries).toBeDefined();
   });
@@ -53,7 +53,7 @@ describe("test web research", () => {
             "The initial topic is broad, covering France as a whole. To ensure comprehensive coverage, three distinct aspects are targeted: economic data for quantitative insights, social developments reflecting societal trends, and technological progress to capture innovation. Each query specifies '2025' or 'mid-2025' to prioritize the most current information available in June 2025, avoiding overlap by focusing on separate domains.",
         },
       ],
-    } as QueryGenerationContext;
+    } as ResearchMachineContext;
 
     const provider = createAzure({
       resourceName: process.env.AZURE_RESOURCE_NAME!,
@@ -67,7 +67,11 @@ describe("test web research", () => {
 
     const languageModel = provider(process.env.AZURE_GPT_4o!);
 
-    const results = await webResearch(state, languageModel, tools);
+    const results = await webResearch({
+      queries: state.queries[0],
+      languageModel,
+      tools,
+    });
 
     expect(results).toBeDefined();
   });
@@ -91,7 +95,7 @@ describe("test reflection", () => {
 
     const languageModel = provider(process.env.DEEPSEEK_MODEL!);
 
-    const results = await reflection(state, languageModel);
+    const results = await reflection({ ...state, languageModel });
 
     /*
     example output:
@@ -127,7 +131,7 @@ describe("test finalizeAnswer", () => {
 
     const languageModel = provider(process.env.DEEPSEEK_MODEL!);
 
-    const results = await finalizeAnswer(state, languageModel);
+    const results = await answer({ ...state, languageModel });
 
     /*
       {
