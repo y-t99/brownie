@@ -1,20 +1,15 @@
 import { createAzure } from "@ai-sdk/azure";
 import { createDeepSeek } from "@ai-sdk/deepseek";
 import { describe, expect, it } from "vitest";
+import { createActor } from "xstate";
 
+import { answer, generateQueries, reflection, webResearch } from "./actor";
 import { createResearchAgentMachine } from "./graph";
 import { ResearchMachineContext } from "./state";
 import {
   serpSearchApiTool,
-  SerpSearchOrganicResult,
-  SerpSearchParams,
   ToolName,
 } from "./tools";
-import { ResearchConfiguration } from "./configuration";
-import { Schema, Tool } from "ai";
-import { createActor, toPromise } from "xstate";
-import { answer, generateQueries, reflection, webResearch } from "./actor";
-import { stat } from "fs";
 
 describe("test query generation", () => {
   it.only("should generate queries", async () => {

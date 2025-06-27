@@ -1,8 +1,9 @@
-import { getCurrentDate, REFLECTION_INSTRUCTIONS } from "@/prompt";
-import { format, getResearchTopic } from "@/utils";
 import { CoreMessage, generateObject, LanguageModel } from "ai";
 import { fromPromise } from "xstate";
 import z from "zod";
+
+import { getCurrentDate, REFLECTION_INSTRUCTIONS } from "@/prompt";
+import { format, getResearchTopic } from "@/utils";
 
 export interface ReflectionActorInput {
   messages: CoreMessage[];

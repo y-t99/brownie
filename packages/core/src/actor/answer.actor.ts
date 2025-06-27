@@ -1,7 +1,8 @@
-import { ANSWER_INSTRUCTIONS, getCurrentDate } from "@/prompt";
-import { format, getResearchTopic } from "@/utils";
 import { CoreMessage, generateText, LanguageModel } from "ai";
 import { fromPromise } from "xstate";
+
+import { ANSWER_INSTRUCTIONS, getCurrentDate } from "@/prompt";
+import { format, getResearchTopic } from "@/utils";
 
 export interface AnswerActorInput {
   messages: CoreMessage[];
@@ -37,7 +38,7 @@ export async function answer(
   return result.text;
 }
 
-export const answerActor = fromPromise<String, AnswerActorInput>(
+export const answerActor = fromPromise<string, AnswerActorInput>(
   async ({ input, signal }) => {
     const finalAnswer = await answer(input, signal);
     return finalAnswer;

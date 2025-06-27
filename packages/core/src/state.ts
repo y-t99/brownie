@@ -1,4 +1,4 @@
-import { CoreMessage, CoreUserMessage, LanguageModel } from "ai";
+import { CoreMessage, CoreUserMessage } from "ai";
 
 import { SearchQueries } from "./tools";
 import { Citation } from "./utils";
