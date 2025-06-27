@@ -25,6 +25,11 @@ export const config = [
     },
   },
   {
+    rules: {
+      "no-console": "warn",
+    },
+  },
+  {
     plugins: {
       onlyWarn,
     },
@@ -59,6 +64,8 @@ export const config = [
           varsIgnorePattern: "^_",
           args: "after-used",
           argsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
         },
       ],
     },

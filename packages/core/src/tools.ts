@@ -17,7 +17,7 @@ export const serpSearchParamsSchema = z.object({
 
 export type SerpSearchParams = z.infer<typeof serpSearchParamsSchema>;
 
-const serpSearchOrganicResultSchema = z.object({
+const _serpSearchOrganicResultSchema = z.object({
   position: z.number(),
   title: z.string(),
   link: z.string(),
@@ -25,7 +25,7 @@ const serpSearchOrganicResultSchema = z.object({
 });
 
 export type SerpSearchOrganicResult = z.infer<
-  typeof serpSearchOrganicResultSchema
+  typeof _serpSearchOrganicResultSchema
 >;
 
 export function serpSearchApiTool(apiKey: string) {
