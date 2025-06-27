@@ -2,6 +2,7 @@ import { CoreAssistantMessage } from "ai";
 import { assign, createMachine, DoneActorEvent } from "xstate";
 
 import {
+  ActorId,
   answerActor,
   AnswerActorInput,
   GenerateQueriesActorInput,
@@ -54,7 +55,7 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
 
         generatingQueries: {
           invoke: {
-            id: "generateQueries",
+            id: ActorId.QueriesGenerationActor,
             src: queryGenerationActor,
             input: ({ context }): GenerateQueriesActorInput => ({
               messages: context.messages,
@@ -67,17 +68,21 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
                 queries: ({
                   context,
                   event,
-                }: {
-                  context: ResearchMachineContext;
-                  event: DoneActorEvent<SearchQueries, string>;
-                }) => [...context.queries, event.output],
+                }) =>{
+                  if (event.actorId === ActorId.QueriesGenerationActor) {
+                    return [...context.queries, event.output]
+                  }
+                  return [...context.queries]
+                },
                 searchQueries: ({
                   context,
                   event,
-                }: {
-                  context: ResearchMachineContext;
-                  event: DoneActorEvent<SearchQueries, string>;
-                }) => [...context.searchQueries, ...event.output.queries],
+                }) => {
+                  if (event.actorId === ActorId.QueriesGenerationActor) {
+                    return [...context.searchQueries, ...event.output.queries]
+                  }
+                  return [...context.searchQueries]
+                },
               }),
             },
             onError: {
@@ -88,7 +93,7 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
 
         webSearching: {
           invoke: {
-            id: "webSearch",
+            id: ActorId.WebResearchActor,
             src: webResearchActor,
             input: ({ context }): WebResearchActorInput => ({
               queries: context.queries[context.queries.length - 1],
@@ -101,21 +106,28 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
                 webResearchResults: ({
                   context,
                   event,
-                }: {
-                  context: ResearchMachineContext;
-                  event: DoneActorEvent<WebResearchResult[], string>;
-                }) => [
-                  ...context.webResearchResults,
-                  ...event.output.map(
-                    (item: WebResearchResult) => item.webResearchResult,
-                  ),
-                ],
-                sourcesGathereds: ({ context, event }) => [
-                  ...context.sourcesGathereds,
-                  ...event.output
-                    .map((item: WebResearchResult) => item.sourcesGathered)
-                    .flat(),
-                ],
+                }) => {
+                  if (event.actorId === ActorId.WebResearchActor) {
+                    return [
+                      ...context.webResearchResults,
+                      ...event.output.map(
+                        (item: WebResearchResult) => item.webResearchResult,
+                      ),
+                    ]
+                  }
+                  return [...context.webResearchResults]
+                },
+                sourcesGathereds: ({ context, event }) => {
+                  if (event.actorId === ActorId.WebResearchActor) {
+                    return [
+                      ...context.sourcesGathereds,
+                      ...event.output
+                        .map((item: WebResearchResult) => item.sourcesGathered)
+                        .flat(),
+                    ]
+                  }
+                  return [...context.sourcesGathereds]
+                },
               }),
             },
             onError: {
@@ -126,7 +138,7 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
 
         reflecting: {
           invoke: {
-            id: "reflection",
+            id: ActorId.ReflectionActor,
             src: reflectionActor,
             input: ({ context }): ReflectionActorInput => ({
               messages: context.messages,
@@ -146,9 +158,12 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
                   type: "isResearchSufficient",
                   params: ({
                     event,
-                  }: {
-                    event: DoneActorEvent<Reflection, string>;
-                  }) => event.output.is_sufficient,
+                  }) => {
+                    if (event.actorId === ActorId.ReflectionActor) {
+                      return event.output.is_sufficient
+                    }
+                    return true
+                  },
                 },
                 actions: assign({
                   researchLoopCount: ({ context }) =>
@@ -169,26 +184,30 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
                   queries: ({
                     context,
                     event,
-                  }: {
-                    context: ResearchMachineContext;
-                    event: DoneActorEvent<Reflection, string>;
-                  }) => [
-                    ...context.queries,
-                    {
-                      queries: event.output.follow_up_queries,
-                      rationale: event.output.knowledge_gap,
-                    },
-                  ],
+                  }) => {
+                    if (event.actorId === ActorId.ReflectionActor) {
+                      return [
+                        ...context.queries,
+                        {
+                          queries: event.output.follow_up_queries,
+                          rationale: event.output.knowledge_gap,
+                        },
+                      ]
+                    }
+                    return [...context.queries]
+                  },
                   searchQueries: ({
                     context,
                     event,
-                  }: {
-                    context: ResearchMachineContext;
-                    event: DoneActorEvent<Reflection, string>;
-                  }) => [
-                    ...context.searchQueries,
-                    ...event.output.follow_up_queries,
-                  ],
+                  }) => {
+                    if (event.actorId === ActorId.ReflectionActor) {
+                      return [
+                        ...context.searchQueries,
+                        ...event.output.follow_up_queries,
+                      ]
+                    }
+                    return [...context.searchQueries]
+                  },
                   researchLoopCount: ({ context }) =>
                     context.researchLoopCount + 1,
                 }),
@@ -202,7 +221,7 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
 
         finalizingAnswer: {
           invoke: {
-            id: "finalizeAnswer",
+            id: ActorId.AnswerActor,
             src: answerActor,
             input: ({ context }): AnswerActorInput => ({
               messages: context.messages,
@@ -215,16 +234,18 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
                 messages: ({
                   context,
                   event,
-                }: {
-                  context: ResearchMachineContext;
-                  event: DoneActorEvent<string, string>;
-                }) => [
-                  ...context.messages,
-                  {
-                    role: "assistant",
-                    content: event.output,
-                  } as CoreAssistantMessage,
-                ],
+                }) => {
+                  if (event.actorId === ActorId.AnswerActor) {
+                    return [
+                      ...context.messages,
+                      {
+                        role: "assistant",
+                        content: event.output,
+                      } as CoreAssistantMessage,
+                    ]
+                  }
+                  return [...context.messages]
+                },
               }),
             },
             onError: {

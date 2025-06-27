@@ -1,5 +1,6 @@
 import { CoreMessage, CoreUserMessage } from "ai";
 
+import { ActorId } from "./actor";
 import { SearchQueries } from "./tools";
 import { Citation } from "./utils";
 
@@ -15,19 +16,6 @@ export interface ResearchMachineContext {
   queryGeneratorModel: string | null;
   reflectionModel: string | null;
   answerModel: string | null;
-}
-
-export interface ReflectionMachineContext {
-  isSufficient: boolean;
-  knowledgeGap: string;
-  followUpQueries: unknown[];
-  researchLoopCount: number;
-  numberOfRanQueries: number;
-}
-
-export interface WebSearchContext {
-  searchQuery: string;
-  id: number;
 }
 
 export type ResearchEvent = {
