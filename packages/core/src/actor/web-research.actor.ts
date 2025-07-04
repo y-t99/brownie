@@ -2,8 +2,8 @@ import { generateText, LanguageModel,Tool, ToolResult  } from "ai";
 import { fromPromise } from "xstate";
 
 import { getCurrentDate, WEB_SEARCHER_INSTRUCTIONS } from "@/prompt";
-import { SearchQueries, ToolName } from "@/tools";
-import { Citation, format, getCitations, insertCitationMarkers } from "@/utils";
+import { SearchQueries, ToolName } from "@/tool";
+import { Citation, format, getCitations, insertCitationMarkers } from "@/util";
 
 export interface WebResearchActorInput {
   queries?: SearchQueries;

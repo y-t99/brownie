@@ -16,7 +16,7 @@ import {
 } from "./actor";
 import { ResearchConfiguration } from "./configuration";
 import { ResearchEvent, ResearchMachineContext } from "./state";
-import { SearchQueries } from "./tools";
+import { SearchQueries } from "./tool";
 
 export function createResearchAgentMachine(config: ResearchConfiguration) {
   return createMachine(

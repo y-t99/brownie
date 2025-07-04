@@ -3,7 +3,7 @@ import { fromPromise } from "xstate";
 import z from "zod";
 
 import { getCurrentDate, REFLECTION_INSTRUCTIONS } from "@/prompt";
-import { format, getResearchTopic } from "@/utils";
+import { format, getResearchTopic } from "@/util";
 
 export interface ReflectionActorInput {
   messages: CoreMessage[];

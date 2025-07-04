@@ -2,7 +2,7 @@ import { CoreMessage, generateText, LanguageModel } from "ai";
 import { fromPromise } from "xstate";
 
 import { ANSWER_INSTRUCTIONS, getCurrentDate } from "@/prompt";
-import { format, getResearchTopic } from "@/utils";
+import { format, getResearchTopic } from "@/util";
 
 export interface AnswerActorInput {
   messages: CoreMessage[];

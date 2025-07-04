@@ -2,8 +2,8 @@ import { CoreMessage, generateObject, LanguageModel } from "ai";
 import { fromPromise } from "xstate";
 
 import { getCurrentDate, QUERY_WRITER_INSTRUCTIONS } from "@/prompt";
-import { SearchQueries, searchQueriesSchema } from "@/tools";
-import { format, getResearchTopic } from "@/utils";
+import { SearchQueries, searchQueriesSchema } from "@/tool";
+import { format, getResearchTopic } from "@/util";
 
 export interface GenerateQueriesActorInput {
   messages: CoreMessage[];

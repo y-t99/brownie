@@ -1,8 +1,8 @@
 import { CoreMessage, CoreUserMessage } from "ai";
 
 import { ActorId } from "./actor";
-import { SearchQueries } from "./tools";
-import { Citation } from "./utils";
+import { SearchQueries } from "./tool";
+import { Citation } from "./util";
 
 export interface ResearchMachineContext {
   messages: CoreMessage[];

@@ -9,7 +9,7 @@ import { ResearchMachineContext } from "./state";
 import {
   serpSearchApiTool,
   ToolName,
-} from "./tools";
+} from "./tool";
 
 describe("test query generation", () => {
   it.only("should generate queries", async () => {

@@ -1,6 +1,6 @@
 import { LanguageModel, Tool } from "ai";
 
-import { ToolName } from "./tools";
+import { ToolName } from "./tool";
 
 export interface ResearchConfiguration {
   queryGeneratorModel: LanguageModel;
