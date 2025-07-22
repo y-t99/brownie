@@ -1,5 +1,5 @@
 import { CoreAssistantMessage } from "ai";
-import { assign, createMachine, DoneActorEvent } from "xstate";
+import { assign, createMachine } from "xstate";
 
 import {
   ActorId,
@@ -7,7 +7,6 @@ import {
   AnswerActorInput,
   GenerateQueriesActorInput,
   queryGenerationActor,
-  Reflection,
   reflectionActor,
   ReflectionActorInput,
   webResearchActor,
@@ -16,7 +15,6 @@ import {
 } from "./actor";
 import { ResearchConfiguration } from "./configuration";
 import { ResearchEvent, ResearchMachineContext } from "./state";
-import { SearchQueries } from "./tool";
 
 export function createResearchAgentMachine(config: ResearchConfiguration) {
   return createMachine(

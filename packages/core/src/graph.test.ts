@@ -1,28 +1,51 @@
 import { createAzure } from "@ai-sdk/azure";
 import { createDeepSeek } from "@ai-sdk/deepseek";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { describe, expect, it } from "vitest";
 import { createActor } from "xstate";
 
 import { answer, generateQueries, reflection, webResearch } from "./actor";
 import { createResearchAgentMachine } from "./graph";
 import { ResearchMachineContext } from "./state";
-import {
-  serpSearchApiTool,
-  ToolName,
-} from "./tool";
+import { serpSearchApiTool, ToolName } from "./tool";
 
 describe("test query generation", () => {
-  it.only("should generate queries", async () => {
+  // it.only("should generate queries - deepseek-v3", async () => {
+  //   const state = {
+  //     messages: [{ role: "user", content: "I want to know about France." }],
+  //     initialSearchQueryCount: 3,
+  //   } as ResearchMachineContext;
+
+  //   const provider = createDeepSeek({
+  //     baseURL: process.env.DEEPSEEK_BASE_URL!,
+  //     apiKey: process.env.DEEPSEEK_API_KEY!,
+  //   });
+
+  //   const languageModel = provider(process.env.DEEPSEEK_MODEL!);
+
+  //   const queries = await generateQueries({
+  //     messages: state.messages,
+  //     numberQueries: state.initialSearchQueryCount,
+  //     languageModel,
+  //   });
+
+  //   expect(queries).toBeDefined();
+
+  // });
+
+  it.only("should generate queries - kimi2", async () => {
     const state = {
       messages: [{ role: "user", content: "I want to know about France." }],
       initialSearchQueryCount: 3,
     } as ResearchMachineContext;
-    const provider = createDeepSeek({
-      baseURL: process.env.DEEPSEEK_BASE_URL,
-      apiKey: process.env.DEEPSEEK_API_KEY,
+
+    const provider = createOpenAICompatible({
+      name: "moonshot",
+      baseURL: process.env.MOONSHOT_BASE_URL!,
+      apiKey: process.env.MOONSHOT_API_KEY!,
     });
 
-    const languageModel = provider(process.env.DEEPSEEK_MODEL!);
+    const languageModel = provider(process.env.MOONSHOT_MODEL!);
 
     const queries = await generateQueries({
       messages: state.messages,

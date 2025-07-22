@@ -17,7 +17,15 @@ export default defineConfig({
       AZURE_API_KEY: process.env.AZURE_API_KEY,
       AZURE_GPT_4o: process.env.AZURE_GPT_4o,
       AZURE_GPT_4o_API_VERSION: process.env.AZURE_GPT_4o_API_VERSION,
+      MOONSHOT_BASE_URL: process.env.MOONSHOT_BASE_URL,
+      MOONSHOT_API_KEY: process.env.MOONSHOT_API_KEY,
+      MOONSHOT_MODEL: process.env.MOONSHOT_MODEL,
     },
     testTimeout: 1000 * 60 * 10,
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
   },
 });
