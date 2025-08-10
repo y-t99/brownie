@@ -9,18 +9,26 @@
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
+    "@trigger.dev/build": "^3.3.17",
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
     "eslint": "^9.28.0",
     "prettier": "^3.5.3",
+    "tsup": "^8.0.0",
     "turbo": "^2.5.2",
     "typescript": "5.8.2",
-    "vitest": "^3.2.3",
-    "tsup": "^8.0.0"
+    "vitest": "^3.2.3"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "@trigger.dev/sdk": "^3.3.17",
+    "dotenv": "^16.5.0",
+    "xstate": "^5.19.4",
+    "axios": "^1.9.0",
+    "zod": "^3.25.56"
   }
 }
