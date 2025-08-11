@@ -10,29 +10,6 @@ import { ResearchMachineContext } from "./state";
 import { serpSearchApiTool, ToolName } from "./tool";
 
 describe("test query generation", () => {
-  // it.only("should generate queries - deepseek-v3", async () => {
-  //   const state = {
-  //     messages: [{ role: "user", content: "I want to know about France." }],
-  //     initialSearchQueryCount: 3,
-  //   } as ResearchMachineContext;
-
-  //   const provider = createDeepSeek({
-  //     baseURL: process.env.DEEPSEEK_BASE_URL!,
-  //     apiKey: process.env.DEEPSEEK_API_KEY!,
-  //   });
-
-  //   const languageModel = provider(process.env.DEEPSEEK_MODEL!);
-
-  //   const queries = await generateQueries({
-  //     messages: state.messages,
-  //     numberQueries: state.initialSearchQueryCount,
-  //     languageModel,
-  //   });
-
-  //   expect(queries).toBeDefined();
-
-  // });
-
   it.only("should generate queries - kimi2", async () => {
     const state = {
       messages: [{ role: "user", content: "I want to know about France." }],
