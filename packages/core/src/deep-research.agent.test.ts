@@ -2,7 +2,7 @@ import { createAzure } from "@ai-sdk/azure";
 import { createDeepSeek } from "@ai-sdk/deepseek";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { describe, expect, it } from "vitest";
-import { createActor } from "xstate";
+import { createActor, waitFor } from "xstate";
 
 import { answer, generateQueries, reflection, webResearch } from "./actor";
 import { createResearchAgentMachine } from "./deep-research.agent";
@@ -212,25 +212,21 @@ describe("test agent", () => {
 
     const actor = createActor(machine);
 
-    await new Promise<void>((resolve, reject) => {
-      const subscription = actor.subscribe((snapshot) => {
-        if (snapshot.status === "done") {
-          subscription.unsubscribe();
-          resolve();
-        }
-      });
+    actor.start();
 
-      actor.start();
-
-      actor.send({
-        type: "START_RESEARCH",
-        messages: [
-          {
-            role: "user",
-            content: "I want to know about France.",
-          },
-        ],
-      });
+    actor.send({
+      type: "START_RESEARCH",
+      messages: [
+        {
+          role: "user",
+          content: "I want to know about France.",
+        },
+      ],
     });
+
+    await waitFor(actor, (snapshot) => snapshot.status === "done");
+
+    const finalSnapshot = actor.getSnapshot();
+    expect(finalSnapshot.status).toBe("done");
   });
 });
