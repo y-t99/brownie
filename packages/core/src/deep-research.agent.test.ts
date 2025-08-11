@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { createActor } from "xstate";
 
 import { answer, generateQueries, reflection, webResearch } from "./actor";
-import { createResearchAgentMachine } from "./graph";
+import { createResearchAgentMachine } from "./deep-research.agent";
 import { ResearchMachineContext } from "./state";
 import { serpSearchApiTool, ToolName } from "./tool";
 
