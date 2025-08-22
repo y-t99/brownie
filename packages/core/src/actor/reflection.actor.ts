@@ -1,4 +1,4 @@
-import { CoreMessage, generateObject, LanguageModel } from "ai";
+import { generateObject, LanguageModel,ModelMessage } from "ai";
 import { fromPromise } from "xstate";
 import z from "zod";
 
@@ -6,7 +6,7 @@ import { getCurrentDate, REFLECTION_INSTRUCTIONS } from "@/prompt";
 import { format, getResearchTopic } from "@/util";
 
 export interface ReflectionActorInput {
-  messages: CoreMessage[];
+  messages: ModelMessage[];
   webResearchResults: string[];
   languageModel: LanguageModel;
 }

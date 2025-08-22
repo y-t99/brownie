@@ -1,4 +1,4 @@
-import { CoreMessage, generateText, LanguageModel } from "ai";
+import { generateText, LanguageModel,ModelMessage } from "ai";
 import { fromPromise } from "xstate";
 import { ZodError } from "zod";
 
@@ -7,14 +7,14 @@ import { SearchQueries, searchQueriesSchema } from "@/tool";
 import { format, getResearchTopic } from "@/util";
 
 export interface GenerateQueriesActorInput {
-  messages: CoreMessage[];
+  messages: ModelMessage[];
   numberQueries: number;
   languageModel: LanguageModel;
 }
 
 export async function generateQueries(
   generateQueriesActorInput: GenerateQueriesActorInput,
-  abortSignal?: AbortSignal
+  abortSignal?: AbortSignal,
 ) {
   const { messages, numberQueries, languageModel } = generateQueriesActorInput;
 
@@ -25,7 +25,7 @@ export async function generateQueries(
     number_queries: numberQueries.toString(),
   });
 
-  const context: CoreMessage[] = [
+  const context: ModelMessage[] = [
     {
       role: "system",
       content: formattedPrompt,
@@ -48,7 +48,7 @@ export async function generateQueries(
 
     try {
       const result = searchQueriesSchema.parse(
-        JSON.parse(text.replace(/```json/, "").replace(/```/, ""))
+        JSON.parse(text.replace(/```json/, "").replace(/```/, "")),
       );
       searchQueries = result;
       break;

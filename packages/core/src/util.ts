@@ -1,4 +1,4 @@
-import { CoreMessage, ToolResult } from "ai";
+import { ModelMessage, ToolResult } from "ai";
 
 import { SerpSearchOrganicResult, ToolName } from "./tool";
 
@@ -6,7 +6,7 @@ export function format(template: string, params: Record<string, string>) {
   return template.replace(/\{(\w+)\}/g, (_, key) => params[key]!);
 }
 
-export function getResearchTopic(messages: CoreMessage[]) {
+export function getResearchTopic(messages: ModelMessage[]) {
   let researchTopic: string = "";
   if (messages.length === 1) {
     const message = messages[messages.length - 1]!;

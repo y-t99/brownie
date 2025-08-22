@@ -1,11 +1,10 @@
-import { CoreMessage, CoreUserMessage } from "ai";
+import { ModelMessage, UserModelMessage } from "ai";
 
-import { ActorId } from "./actor";
 import { SearchQueries } from "./tool";
 import { Citation } from "./util";
 
 export interface ResearchMachineContext {
-  messages: CoreMessage[];
+  messages: ModelMessage[];
   queries: SearchQueries[];
   searchQueries: string[];
   webResearchResults: string[];
@@ -20,5 +19,5 @@ export interface ResearchMachineContext {
 
 export type ResearchEvent = {
   type: "START_RESEARCH";
-  messages: CoreUserMessage[];
+  messages: UserModelMessage[];
 };

@@ -9,9 +9,9 @@ As soon as we introduce a second place for state to live, whether that’s a ser
 
 ```typescript
 function handleRequest() {
-  paymentAPI.chargeCard()
-  database.insertOrder()
-  return 200
+  paymentAPI.chargeCard();
+  database.insertOrder();
+  return 200;
 }
 ```
 

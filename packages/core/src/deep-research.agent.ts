@@ -1,4 +1,4 @@
-import { CoreAssistantMessage } from "ai";
+import { AssistantModelMessage } from "ai";
 import { assign, createMachine } from "xstate";
 
 import {
@@ -31,9 +31,18 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
         maxResearchLoops: config.maxResearchLoops,
         researchLoopCount: 0,
         queries: [],
-        queryGeneratorModel: config.queryGeneratorModel.provider,
-        reflectionModel: config.reflectionModel.provider,
-        answerModel: config.answerModel.provider,
+        queryGeneratorModel:
+          typeof config.queryGeneratorModel === "string"
+            ? config.queryGeneratorModel
+            : config.queryGeneratorModel.provider,
+        reflectionModel:
+          typeof config.reflectionModel === "string"
+            ? config.reflectionModel
+            : config.reflectionModel.provider,
+        answerModel:
+          typeof config.answerModel === "string"
+            ? config.answerModel
+            : config.answerModel.provider,
       },
       types: {
         context: {} as ResearchMachineContext,
@@ -63,23 +72,17 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
             onDone: {
               target: "webSearching",
               actions: assign({
-                queries: ({
-                  context,
-                  event,
-                }) =>{
+                queries: ({ context, event }) => {
                   if (event.actorId === ActorId.QueriesGenerationActor) {
-                    return [...context.queries, event.output]
+                    return [...context.queries, event.output];
                   }
-                  return [...context.queries]
+                  return [...context.queries];
                 },
-                searchQueries: ({
-                  context,
-                  event,
-                }) => {
+                searchQueries: ({ context, event }) => {
                   if (event.actorId === ActorId.QueriesGenerationActor) {
-                    return [...context.searchQueries, ...event.output.queries]
+                    return [...context.searchQueries, ...event.output.queries];
                   }
-                  return [...context.searchQueries]
+                  return [...context.searchQueries];
                 },
               }),
             },
@@ -101,19 +104,16 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
             onDone: {
               target: "reflecting",
               actions: assign({
-                webResearchResults: ({
-                  context,
-                  event,
-                }) => {
+                webResearchResults: ({ context, event }) => {
                   if (event.actorId === ActorId.WebResearchActor) {
                     return [
                       ...context.webResearchResults,
                       ...event.output.map(
                         (item: WebResearchResult) => item.webResearchResult,
                       ),
-                    ]
+                    ];
                   }
-                  return [...context.webResearchResults]
+                  return [...context.webResearchResults];
                 },
                 sourcesGathereds: ({ context, event }) => {
                   if (event.actorId === ActorId.WebResearchActor) {
@@ -122,9 +122,9 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
                       ...event.output
                         .map((item: WebResearchResult) => item.sourcesGathered)
                         .flat(),
-                    ]
+                    ];
                   }
-                  return [...context.sourcesGathereds]
+                  return [...context.sourcesGathereds];
                 },
               }),
             },
@@ -154,13 +154,11 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
                 target: "finalizingAnswer",
                 guard: {
                   type: "isResearchSufficient",
-                  params: ({
-                    event,
-                  }) => {
+                  params: ({ event }) => {
                     if (event.actorId === ActorId.ReflectionActor) {
-                      return event.output.is_sufficient
+                      return event.output.is_sufficient;
                     }
-                    return true
+                    return true;
                   },
                 },
                 actions: assign({
@@ -179,10 +177,7 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
               {
                 target: "webSearching",
                 actions: assign({
-                  queries: ({
-                    context,
-                    event,
-                  }) => {
+                  queries: ({ context, event }) => {
                     if (event.actorId === ActorId.ReflectionActor) {
                       return [
                         ...context.queries,
@@ -190,21 +185,18 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
                           queries: event.output.follow_up_queries,
                           rationale: event.output.knowledge_gap,
                         },
-                      ]
+                      ];
                     }
-                    return [...context.queries]
+                    return [...context.queries];
                   },
-                  searchQueries: ({
-                    context,
-                    event,
-                  }) => {
+                  searchQueries: ({ context, event }) => {
                     if (event.actorId === ActorId.ReflectionActor) {
                       return [
                         ...context.searchQueries,
                         ...event.output.follow_up_queries,
-                      ]
+                      ];
                     }
-                    return [...context.searchQueries]
+                    return [...context.searchQueries];
                   },
                   researchLoopCount: ({ context }) =>
                     context.researchLoopCount + 1,
@@ -229,20 +221,17 @@ export function createResearchAgentMachine(config: ResearchConfiguration) {
             onDone: {
               target: "completed",
               actions: assign({
-                messages: ({
-                  context,
-                  event,
-                }) => {
+                messages: ({ context, event }) => {
                   if (event.actorId === ActorId.AnswerActor) {
                     return [
                       ...context.messages,
                       {
                         role: "assistant",
                         content: event.output,
-                      } as CoreAssistantMessage,
-                    ]
+                      } as AssistantModelMessage,
+                    ];
                   }
-                  return [...context.messages]
+                  return [...context.messages];
                 },
               }),
             },

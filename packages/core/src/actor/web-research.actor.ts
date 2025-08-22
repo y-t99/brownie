@@ -1,4 +1,10 @@
-import { generateText, LanguageModel,Tool, ToolResult  } from "ai";
+import {
+  generateText,
+  LanguageModel,
+  Tool,
+  ToolSet,
+  TypedToolResult,
+} from "ai";
 import { fromPromise } from "xstate";
 
 import { getCurrentDate, WEB_SEARCHER_INSTRUCTIONS } from "@/prompt";
@@ -46,26 +52,24 @@ export async function webResearch(
     if (searchStep.reasoning) {
       parts.push({
         type: "reasoning" as const,
-        reasoning: searchStep.reasoning,
-        details: searchStep.reasoningDetails,
+        reasoning: searchStep.reasoningText,
+        details: searchStep.reasoning,
       });
     }
 
     if (searchStep.toolResults && searchStep.toolResults.length > 0) {
-      searchStep.toolResults.forEach(
-        (toolResult: ToolResult<string, unknown, unknown>) => {
-          parts.push({
-            type: "tool-invocation" as const,
-            toolInvocation: {
-              state: "result" as const,
-              toolCallId: toolResult.toolCallId,
-              toolName: toolResult.toolName,
-              args: toolResult.args,
-              result: toolResult.result,
-            },
-          });
-        },
-      );
+      searchStep.toolResults.forEach((toolResult: TypedToolResult<ToolSet>) => {
+        parts.push({
+          type: "tool-invocation" as const,
+          toolInvocation: {
+            state: "result" as const,
+            toolCallId: toolResult.toolCallId,
+            toolName: toolResult.toolName,
+            args: toolResult.input,
+            result: toolResult.output,
+          },
+        });
+      });
     }
 
     const responseStep = await generateText({

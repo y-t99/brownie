@@ -50,15 +50,15 @@ describe("test web research", () => {
       ],
     } as ResearchMachineContext;
 
+    const tools = {
+      [ToolName.SearchTool]: serpSearchApiTool(process.env.SERP_API_KEY!),
+    };
+
     const provider = createAzure({
       resourceName: process.env.AZURE_RESOURCE_NAME!,
       apiKey: process.env.AZURE_API_KEY!,
       apiVersion: process.env.AZURE_GPT_4o_API_VERSION!,
     });
-
-    const tools = {
-      [ToolName.SearchTool]: serpSearchApiTool(process.env.SERP_API_KEY!),
-    };
 
     const languageModel = provider(process.env.AZURE_GPT_4o!);
 

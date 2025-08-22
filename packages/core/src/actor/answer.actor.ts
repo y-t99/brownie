@@ -1,11 +1,11 @@
-import { CoreMessage, generateText, LanguageModel } from "ai";
+import { generateText, LanguageModel,ModelMessage } from "ai";
 import { fromPromise } from "xstate";
 
 import { ANSWER_INSTRUCTIONS, getCurrentDate } from "@/prompt";
 import { format, getResearchTopic } from "@/util";
 
 export interface AnswerActorInput {
-  messages: CoreMessage[];
+  messages: ModelMessage[];
   webResearchResults: string[];
   languageModel: LanguageModel;
 }
