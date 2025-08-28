@@ -1,6 +1,6 @@
-import { createAzure } from "@ai-sdk/azure";
-import { createDeepSeek } from "@ai-sdk/deepseek";
+/* eslint-disable turbo/no-undeclared-env-vars */
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import { Tool } from "ai";
 import { describe, expect, it } from "vitest";
 import { createActor, waitFor } from "xstate";
 
@@ -16,13 +16,13 @@ describe("test query generation", () => {
       initialSearchQueryCount: 3,
     } as ResearchMachineContext;
 
-    const provider = createOpenAICompatible({
-      name: "moonshot",
-      baseURL: process.env.MOONSHOT_BASE_URL!,
-      apiKey: process.env.MOONSHOT_API_KEY!,
-    });
+  const provider = createOpenAICompatible({
+    name: "openai-compatible",
+    baseURL: process.env.OPENAI_BASE_URL!,
+    apiKey: process.env.OPENAI_API_KEY!,
+  });
 
-    const languageModel = provider(process.env.MOONSHOT_MODEL!);
+  const languageModel = provider(process.env.OPENAI_DEFAULT_MODEL!);
 
     const queries = await generateQueries({
       messages: state.messages,
@@ -54,13 +54,13 @@ describe("test web research", () => {
       [ToolName.SearchTool]: serpSearchApiTool(process.env.SERP_API_KEY!),
     };
 
-    const provider = createAzure({
-      resourceName: process.env.AZURE_RESOURCE_NAME!,
-      apiKey: process.env.AZURE_API_KEY!,
-      apiVersion: process.env.AZURE_GPT_4o_API_VERSION!,
-    });
+      const provider = createOpenAICompatible({
+    name: "openai-compatible",
+    baseURL: process.env.OPENAI_BASE_URL!,
+    apiKey: process.env.OPENAI_API_KEY!,
+  });
 
-    const languageModel = provider(process.env.AZURE_GPT_4o!);
+  const languageModel = provider(process.env.OPENAI_DEFAULT_MODEL!);
 
     const results = await webResearch({
       queries: state.queries[0],
@@ -83,12 +83,13 @@ describe("test reflection", () => {
       ],
     } as ResearchMachineContext;
 
-    const provider = createDeepSeek({
-      baseURL: process.env.DEEPSEEK_BASE_URL,
-      apiKey: process.env.DEEPSEEK_API_KEY,
-    });
+  const provider = createOpenAICompatible({
+    name: "openai-compatible",
+    baseURL: process.env.OPENAI_BASE_URL!,
+    apiKey: process.env.OPENAI_API_KEY!,
+  });
 
-    const languageModel = provider(process.env.DEEPSEEK_MODEL!);
+  const languageModel = provider(process.env.OPENAI_DEFAULT_MODEL!);
 
     const results = await reflection({ ...state, languageModel });
 
@@ -119,12 +120,14 @@ describe("test finalizeAnswer", () => {
       ],
     } as ResearchMachineContext;
 
-    const provider = createDeepSeek({
-      baseURL: process.env.DEEPSEEK_BASE_URL,
-      apiKey: process.env.DEEPSEEK_API_KEY,
-    });
 
-    const languageModel = provider(process.env.DEEPSEEK_MODEL!);
+  const provider = createOpenAICompatible({
+    name: "openai-compatible",
+    baseURL: process.env.OPENAI_BASE_URL!,
+    apiKey: process.env.OPENAI_API_KEY!,
+  });
+
+  const languageModel = provider(process.env.OPENAI_DEFAULT_MODEL!);
 
     const results = await answer({ ...state, languageModel });
 
@@ -191,13 +194,14 @@ describe("test finalizeAnswer", () => {
 
 describe("test agent", () => {
   it.only("should generate agent state", async () => {
-    const provider = createAzure({
-      resourceName: process.env.AZURE_RESOURCE_NAME!,
-      apiKey: process.env.AZURE_API_KEY!,
-      apiVersion: process.env.AZURE_GPT_4o_API_VERSION!,
+
+    const provider = createOpenAICompatible({
+      name: "openai-compatible",
+      baseURL: process.env.OPENAI_BASE_URL!,
+      apiKey: process.env.OPENAI_API_KEY!,
     });
 
-    const languageModel = provider(process.env.AZURE_GPT_4o!);
+    const languageModel = provider(process.env.OPENAI_DEFAULT_MODEL!);
 
     const machine = createResearchAgentMachine({
       queryGeneratorModel: languageModel,
@@ -207,7 +211,7 @@ describe("test agent", () => {
       maxResearchLoops: 1,
       tools: {
         [ToolName.SearchTool]: serpSearchApiTool(process.env.SERP_API_KEY!),
-      },
+      } as Record<ToolName, Tool>,
     });
 
     const actor = createActor(machine);

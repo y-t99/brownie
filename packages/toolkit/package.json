@@ -1,5 +1,5 @@
 {
-  "name": "@brownie/core",
+  "name": "@brownie/toolkit",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -20,11 +20,7 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "@brownie/toolkit": "workspace:*"
+    "@repo/typescript-config": "workspace:*"
   },
-  "dependencies": {
-    "xstate": "^5.19.4",
-    "@ai-sdk/openai-compatible": "^1.0.11"
-  }
+  "dependencies": {}
 }

@@ -1,3 +1,4 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 import { config } from "dotenv";
 import path from "path";
 import { defineConfig } from "vitest/config";
@@ -20,6 +21,11 @@ export default defineConfig({
       MOONSHOT_BASE_URL: process.env.MOONSHOT_BASE_URL,
       MOONSHOT_API_KEY: process.env.MOONSHOT_API_KEY,
       MOONSHOT_MODEL: process.env.MOONSHOT_MODEL,
+      OPENAI_BASE_URL: process.env.OPENAI_BASE_URL,
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+      OPEN_ROUTER_BASE_URL: process.env.OPEN_ROUTER_BASE_URL,
+      OPEN_ROUTER_KEY: process.env.OPEN_ROUTER_KEY,
+      OPENAI_DEFAULT_MODEL: process.env.OPENAI_DEFAULT_MODEL,
     },
     testTimeout: 1000 * 60 * 10,
   },
