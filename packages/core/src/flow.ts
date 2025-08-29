@@ -9,13 +9,13 @@ export async function run(
   model: LanguageModelV2,
   messages: ModelMessage[],
   optional: {
-    max?: number;
+    maxSession?: number;
     tools?: ToolSet;
   }
 ) {
-  const { max = 10, tools } = optional;
+  const { maxSession = 10, tools } = optional;
   const context = [...messages];
-  for (let i = 0; i < max; i++) {
+  for (let i = 0; i < maxSession; i++) {
     const assistant = await generateText({
       model,
       messages: context,

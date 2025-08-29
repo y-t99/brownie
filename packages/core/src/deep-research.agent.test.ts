@@ -1,6 +1,5 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
-import { Tool } from "ai";
 import { describe, expect, it } from "vitest";
 import { createActor, waitFor } from "xstate";
 
@@ -54,13 +53,13 @@ describe("test web research", () => {
       [ToolName.SearchTool]: serpSearchApiTool(process.env.SERP_API_KEY!),
     };
 
-      const provider = createOpenAICompatible({
-    name: "openai-compatible",
-    baseURL: process.env.OPENAI_BASE_URL!,
-    apiKey: process.env.OPENAI_API_KEY!,
-  });
+    const provider = createOpenAICompatible({
+      name: "openai-compatible",
+      baseURL: process.env.OPENAI_BASE_URL!,
+      apiKey: process.env.OPENAI_API_KEY!,
+    });
 
-  const languageModel = provider(process.env.OPENAI_DEFAULT_MODEL!);
+    const languageModel = provider(process.env.OPENAI_DEFAULT_MODEL!);
 
     const results = await webResearch({
       queries: state.queries[0],
@@ -211,7 +210,7 @@ describe("test agent", () => {
       maxResearchLoops: 1,
       tools: {
         [ToolName.SearchTool]: serpSearchApiTool(process.env.SERP_API_KEY!),
-      } as Record<ToolName, Tool>,
+      }
     });
 
     const actor = createActor(machine);

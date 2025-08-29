@@ -8,5 +8,7 @@ export interface ResearchConfiguration {
   answerModel: LanguageModel;
   numberOfInitialQueries: number;
   maxResearchLoops: number;
-  tools: Record<ToolName, Tool>;
+  tools: {
+    [ToolName.SearchTool]: Tool;
+  };
 }
