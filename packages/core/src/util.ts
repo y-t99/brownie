@@ -1,4 +1,4 @@
-import { ModelMessage, ToolResult } from "ai";
+import { ModelMessage, Tool, ToolSet, TypedToolResult } from "ai";
 
 import { SerpSearchOrganicResult, ToolName } from "./tool";
 
@@ -35,12 +35,12 @@ export interface Citation {
 }
 
 export function getCitations(
-  toolResults: ToolResult<string, unknown, unknown>[],
+  toolResults: TypedToolResult<ToolSet>[],
 ) {
   const citations: Citation[] = [];
   for (const toolResult of toolResults) {
     if (toolResult.toolName === ToolName.SearchTool) {
-      const output = toolResult.result as SerpSearchOrganicResult[];
+      const output = toolResult.output as SerpSearchOrganicResult[];
       for (const result of output) {
         citations.push({
           title: result.title,

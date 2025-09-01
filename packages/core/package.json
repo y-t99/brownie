@@ -19,8 +19,8 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@brownie/eslint-config": "workspace:*",
+    "@brownie/typescript-config": "workspace:*",
     "@brownie/toolkit": "workspace:*"
   },
   "dependencies": {
