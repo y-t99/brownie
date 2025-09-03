@@ -1,5 +1,5 @@
 {
-  "name": "@brownie/core",
+  "name": "@brownie/task",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -13,21 +13,20 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --format esm,cjs --watch --dts",
+    "dev:trigger": "npx trigger.dev@latest dev",
     "lint": "eslint \"src/**/*.ts*\"",
-    "format": "eslint --fix \"src/**/*.ts*\"",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "format": "eslint --fix \"src/**/*.ts*\""
   },
   "devDependencies": {
     "@brownie/eslint-config": "workspace:*",
-    "@brownie/typescript-config": "workspace:*"
+    "@brownie/toolkit": "workspace:*",
+    "@brownie/typescript-config": "workspace:*",
+    "@trigger.dev/build": "^4.0.0"
   },
   "dependencies": {
-    "@brownie/toolkit": "workspace:*",
-    "xstate": "^5.19.4",
-    "ai": "^5.0.21",
-    "@ai-sdk/provider": "2.0.0",
     "@ai-sdk/openai-compatible": "^1.0.11",
+    "@trigger.dev/sdk": "^4.0.0",
+    "ai": "^5.0.21",
     "zod": "^3.25.56"
   }
 }
