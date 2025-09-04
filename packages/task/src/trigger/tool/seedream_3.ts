@@ -3,7 +3,7 @@ import { ai } from "@trigger.dev/sdk/ai";
 import z from "zod/v4";
 
 const seedream3ToolTask = schemaTask({
-  id: "seedream-3",
+  id: "seedream-3-tool",
   description: "A native high-resolution bilingual image generation foundational model (Chinese-English). Seedream 3.0 delivers significantly enhanced capabilities: it supports native **2K resolution** output, offers faster response speeds, **generates more accurate small text, improves text layout effects**, enhances **aesthetics** and structural quality, and demonstrates excellent fidelity and detail performance.",
   schema: z.object({
     prompt: z.string().describe("The text prompt used to generate the image."),

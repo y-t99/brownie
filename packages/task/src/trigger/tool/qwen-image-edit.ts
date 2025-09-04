@@ -3,7 +3,7 @@ import { ai } from "@trigger.dev/sdk/ai";
 import z from "zod/v4";
 
 const qwenImageEditToolTask = schemaTask({
-  id: "seedream-3",
+  id: "qwen-image-edit-tool",
   description: `Key Features:
 Semantic and Appearance Editing: Qwen-Image-Edit supports both low-level visual appearance editing (such as adding, removing, or modifying elements, requiring all other regions of the image to remain completely unchanged) and high-level visual semantic editing (such as IP creation, object rotation, and style transfer, allowing overall pixel changes while maintaining semantic consistency).
 Precise Text Editing: Qwen-Image-Edit supports bilingual (Chinese and English) text editing, allowing direct addition, deletion, and modification of text in images while preserving the original font, size, and style.`,
