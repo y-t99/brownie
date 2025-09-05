@@ -13,6 +13,7 @@ export default defineConfig({
       OPEN_ROUTER_BASE_URL: process.env.OPEN_ROUTER_BASE_URL,
       OPEN_ROUTER_KEY: process.env.OPEN_ROUTER_KEY,
       OPENAI_DEFAULT_MODEL: process.env.OPENAI_DEFAULT_MODEL,
+      TRIGGER_SECRET_KEY: process.env.TRIGGER_DEV_TOKEN
     },
     testTimeout: 1000 * 60 * 10,
   },

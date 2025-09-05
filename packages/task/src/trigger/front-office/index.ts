@@ -1,6 +1,6 @@
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
-import { envvars, task } from "@trigger.dev/sdk";
-import { generateText, ModelMessage } from "ai";
+import { envvars, metadata, task } from "@trigger.dev/sdk";
+import { ModelMessage, streamText } from "ai";
 
 import { qwenImageEditTool, seedream3Tool } from "../tool";
 
@@ -47,19 +47,25 @@ and explain that there is a limit of 1 image per request.
       { role: "user", content: payload.message}
     ];
 
-    for (let i = 0; i < maxSession; i++) {
-      const assistant = await generateText({
+    let stopSession = false;
+    for (let i = 0; i < maxSession && !stopSession; i++) {
+      const assistant = await streamText({
         model: languageModel,
         messages: context,
         tools: {
           qwenImageEditTool,
           seedream3Tool
+        },
+        onFinish: (response) => {
+          context.push(...response.response.messages);
+          if (response.finishReason === "tool-calls") {
+            stopSession = true;
+          }
         }
       });
-      context.push(...assistant.response.messages);
-      if (assistant.finishReason !== "tool-calls") {
-        break;
-      }
+      const stream = await metadata.stream(`session_${i}`, assistant.fullStream);
+      // eslint-disable-next-line no-empty
+      for await (const _ of stream) { }
     }
 
     return context;
