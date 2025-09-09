@@ -13,13 +13,16 @@ export class AppController {
     const { message } = body;
     const handle = await tasks.trigger("front-office-assiant", { message });
 
-    const streamResult = runs.subscribeToRun<typeof FrontOfficeAssiant>(handle.id).withStreams();
+    const subscribe = runs.subscribeToRun<typeof FrontOfficeAssiant>(handle.id);
+
+    const streamResult = subscribe.withStreams();
     
     const transformedStream = streamResult.pipeThrough(new TransformStream({
       transform(chunk, controller) {
         if (chunk.type === 'run') {
           if (!chunk.run.isExecuting && !chunk.run.isWaiting && !chunk.run.isQueued) {
             controller.terminate();
+            subscribe.unsubscribe();
           }
         } else if (chunk.type.startsWith('session_')) {
           const modelMessage = (chunk as { chunk: unknown }).chunk as UIMessageChunk;

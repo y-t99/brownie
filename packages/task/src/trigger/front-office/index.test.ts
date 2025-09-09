@@ -9,9 +9,10 @@ describe("test front-office", () => {
 
     const handle = await tasks.trigger("front-office-assiant", { message: " Design a bold and dynamic vector icon of [✌️], in a high-contrast color palette: pure black, white, and neon green. The style is playful, expressive, and energetic, with thick black outlines, exaggerated forms, and cartoon-like proportions. Add dynamic shadows and minimalistic graphic effects to create a strong visual impact. The design should feel fun, lively, slightly rebellious, and tech-inspired. No gradients, no textures — only flat colors and striking contrast."});
 
-    for await (const part of runs.subscribeToRun<typeof FrontOfficeAssiant>(handle.id).withStreams()) {
+    const subscribe = runs.subscribeToRun<typeof FrontOfficeAssiant>(handle.id);
+    for await (const part of subscribe.withStreams()) {
       if (part.type === "run" && part.run.status === "COMPLETED") {
-        break;
+        subscribe.unsubscribe();
       }
 
       if (part.type.startsWith("session_")) {
