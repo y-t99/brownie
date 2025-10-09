@@ -1,15 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from './db-provider';
+import { generateUUID, UUIDType } from './util/uuid-helper';
+import { ChatService } from './service/chat.service';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World! Welcome to Brownie API 🍫';
-  }
 
-  getHealth(): { status: string; timestamp: string } {
-    return {
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-    };
-  }
+  constructor(private readonly chatService: ChatService) {}
+
 }

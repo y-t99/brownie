@@ -1,0 +1,102 @@
+generator default {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  uuid       String   @unique @db.Char(191)
+  name       String   @db.Char(191)
+  deleted    Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  created_by String   @db.Char(191)
+  updated_by String   @db.Char(191)
+
+  @@map("user")
+}
+
+model ChatSession {
+  id         Int      @id @default(autoincrement())
+  uuid       String   @unique @db.Char(191)
+  deleted    Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  created_by String   @db.Char(191)
+  updated_by String   @db.Char(191)
+
+  @@map("chat_session")
+}
+
+model ChatMessage {
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @db.Char(191)
+  session_uuid String   @db.Char(191)
+  role         String   @db.Char(32)
+  status       String   @db.Char(32)
+  meta         Json?
+  deleted      Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  created_by   String   @db.Char(191)
+  updated_by   String   @db.Char(191)
+
+  @@index([session_uuid])
+  @@index([created_by, session_uuid])
+  @@map("chat_message")
+}
+
+model ChatMessageBlock {
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @db.Char(191)
+  session_uuid String   @db.Char(191)
+  message_uuid String   @db.Char(191)
+  content      Json     @db.Json
+  deleted      Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  created_by   String   @db.Char(191)
+  updated_by   String   @db.Char(191)
+
+  @@index([session_uuid])
+  @@index([message_uuid])
+  @@index([created_by, session_uuid, message_uuid])
+  @@map("chat_message_block")
+}
+
+model Task {
+  id         Int      @id @default(autoincrement())
+  uuid       String   @unique @db.Char(191)
+  title      String   @db.Char(32)
+  meta       Json     @db.Json
+  payload    Json     @db.Json
+  deleted    Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  created_by String   @db.Char(191)
+  updated_by String   @db.Char(191)
+
+  @@index([created_by])
+  @@map("task")
+}
+
+model TaskResourceRelation {
+  id            Int      @id @default(autoincrement())
+  uuid          String   @unique @db.Char(191)
+  task_uuid     String   @db.Char(191)
+  resource_type String   @db.Char(32)
+  resource_uuid String   @db.Char(191)
+  deleted       Boolean  @default(false)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  created_by    String   @db.Char(191)
+  updated_by    String   @db.Char(191)
+
+  @@index([task_uuid])
+  @@index([resource_uuid])
+  @@map("task_resource_relation")
+}

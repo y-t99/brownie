@@ -14,17 +14,4 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World! Welcome to Brownie API 🍫"', () => {
-      expect(appController.getHello()).toBe('Hello World! Welcome to Brownie API 🍫');
-    });
-  });
-
-  describe('health', () => {
-    it('should return health status', () => {
-      const health = appController.getHealth();
-      expect(health.status).toBe('ok');
-      expect(health.timestamp).toBeDefined();
-    });
-  });
 });
