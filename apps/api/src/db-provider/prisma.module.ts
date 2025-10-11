@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
+ 
 import type { Provider } from '@nestjs/common';
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+
 import { PrismaService } from './prisma.service';
 
 export const PrismaProvider: Provider = {

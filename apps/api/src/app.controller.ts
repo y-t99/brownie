@@ -1,8 +1,9 @@
-import { Controller, Sse, MessageEvent, Body } from '@nestjs/common';
-import { AppService } from './app.service';
-import { from, map, Observable, catchError, of } from 'rxjs';
-import { runs, tasks, FrontOfficeAssiant } from '@brownie/task';
+import { FrontOfficeAssiant,runs, tasks } from '@brownie/task';
+import { Body,Controller, MessageEvent, Sse } from '@nestjs/common';
 import { UIMessageChunk } from 'ai';
+import { catchError, from, map, Observable, of } from 'rxjs';
+
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {

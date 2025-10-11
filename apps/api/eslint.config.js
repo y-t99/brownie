@@ -1,7 +1,7 @@
-import { config } from "@brownie/eslint-config/base";
+const { config } = require("@brownie/eslint-config/base");
 
 /** @type {import("eslint").Linter.Config[]} */
-export default [
+module.exports = [
   ...config,
   {
     files: ["**/*.ts", "**/*.tsx"],

@@ -1,12 +1,20 @@
 {
   "name": "@brownie/eslint-config",
   "version": "0.0.0",
-  "type": "module",
   "private": true,
   "exports": {
-    "./base": "./base.js",
-    "./next-js": "./next.js",
-    "./react-internal": "./react-internal.js"
+    "./base": {
+      "import": "./base.js",
+      "require": "./base.cjs"
+    },
+    "./next-js": {
+      "import": "./next.js",
+      "require": "./next.cjs"
+    },
+    "./react-internal": {
+      "import": "./react-internal.js",
+      "require": "./react-internal.cjs"
+    }
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",

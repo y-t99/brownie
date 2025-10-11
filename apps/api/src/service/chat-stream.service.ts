@@ -1,10 +1,10 @@
-import { NotFoundException, MessageEvent } from "@nestjs/common";
-import { PrismaService } from "src/db-provider";
-import { ChatMessageRole, ChatMessageStatus, TaskResourceType } from "../enum";
+import { FrontOfficeAssiant , runs } from "@brownie/task";
+import { MessageEvent,NotFoundException } from "@nestjs/common";
+import { AssistantModelMessage, ToolModelMessage,UIMessageChunk } from "ai";
 import { catchError, from, map, Observable, of } from "rxjs";
-import { UIMessageChunk, AssistantModelMessage, ToolModelMessage } from "ai";
-import { FrontOfficeAssiant } from "@brownie/task";
-import { runs } from "@brownie/task";
+import { PrismaService } from "src/db-provider";
+
+import { ChatMessageRole, ChatMessageStatus, TaskResourceType } from "../enum";
 import { TaskMeta } from "../type";
 
 export class ChatStreamService {

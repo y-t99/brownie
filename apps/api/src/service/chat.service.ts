@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../db-provider';
-import { generateUUID, UUIDType } from '../util';
-import { ModelMessage } from 'ai';
 import { ChatMessageBlock } from '@prisma/client';
+import { ModelMessage } from 'ai';
+
+import { PrismaService } from '../db-provider';
 import { ChatMessageStatus } from '../enum';
+import { generateUUID, UUIDType } from '../util';
 
 @Injectable()
 export class ChatService {

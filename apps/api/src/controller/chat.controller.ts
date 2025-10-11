@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, Req, Sse, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Req, Sse } from "@nestjs/common";
+
 import { ChatService, ChatStreamService } from "../service";
 import { AuthRequest } from "../type";
 
