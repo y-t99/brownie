@@ -1,0 +1,31 @@
+{
+  "name": "@brownie/mem4ai",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.js",
+    "require": "./dist/index.cjs",
+    "types": "./dist/index.d.ts"
+  },
+  "sideEffects": false,
+  "license": "MIT",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "format": "eslint --fix \"src/**/*.ts*\""
+  },
+  "devDependencies": {
+    "@brownie/eslint-config": "workspace:*",
+    "@brownie/typescript-config": "workspace:*"
+  },
+  "dependencies": {
+    "@ai-sdk/openai-compatible": "catalog:",
+    "ai": "catalog:",
+    "zod": "catalog:" 
+  }
+}

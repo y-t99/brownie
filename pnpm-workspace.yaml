@@ -4,6 +4,6 @@ packages:
 
 catalog:
   "@trigger.dev/sdk": ^4.0.2
-  ai: ^5.0.21
+  ai: ^5.0.70
   zod: ^3.25.56
   "@ai-sdk/openai-compatible": ^1.0.15

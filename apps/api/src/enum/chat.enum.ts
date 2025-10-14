@@ -6,6 +6,7 @@ export enum ChatMessageRole {
 }
 
 export enum ChatMessageStatus {
+  EXECUTING = 'executing',
   PROCESSING = 'processing',
   PENDING = 'pending',
   SUCCESS = 'success',
@@ -21,4 +22,8 @@ export enum ChatMessageFinishReason {
   ERROR = 'error',
   OTHER = 'other',
   UNKNOWN = 'unknown',
+}
+
+export enum ChatMessageSpecification {
+  VERCEL = 'vercel',
 }

@@ -1,10 +1,11 @@
 import { FrontOfficeAssiant , runs } from "@brownie/task";
 import { MessageEvent,NotFoundException } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 import { AssistantModelMessage, ToolModelMessage,UIMessageChunk } from "ai";
 import { catchError, from, map, Observable, of } from "rxjs";
 import { PrismaService } from "src/db-provider";
 
-import { ChatMessageRole, ChatMessageStatus, TaskResourceType } from "../enum";
+import { ChatMessageRole, ChatMessageStatus, EventDataType, TaskResourceType } from "../enum";
 import { TaskMeta } from "../type";
 
 export class ChatStreamService {
@@ -32,14 +33,14 @@ export class ChatStreamService {
           deleted: false,
         },
         orderBy: {
-          created_at: 'asc',
+          created_at: Prisma.SortOrder.asc,
         },
       });
       return from(chatMessageBlock.map((e) => {
         return {
           id: e.uuid,
           data: e.content as AssistantModelMessage | ToolModelMessage,
-          type: 'block',
+          type: EventDataType.BLOCK,
         };
       }));
     }
@@ -52,7 +53,7 @@ export class ChatStreamService {
         deleted: false,
       },
       orderBy: {
-        created_at: 'desc',
+        created_at: Prisma.SortOrder.desc,
       },
     })
 
@@ -93,15 +94,14 @@ export class ChatStreamService {
       map((value) => {
         return {
           ...value,
-          type: 'chunk'
+          type: EventDataType.CHUNK,
         };
       }),
       catchError((error) => {
         subscribe.unsubscribe();
         return of({
-          id: '',
-          type: 'chunk',
-          data: null,
+          type: EventDataType.CHUNK,
+          data: error.message,
         });
       })
     );

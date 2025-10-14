@@ -23,7 +23,8 @@ and explain that there is a limit of 1 image per request.
 ## Capabilities
 
 - Generating high-quality images from text descriptions.
-- Making intelligent edits to images based on user commands.`
+- Making intelligent edits to images based on user commands.
+- Understanding images based on user commands.`
 
     // Message History
 
