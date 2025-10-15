@@ -1,8 +1,6 @@
 import { Body, Controller, Get, Param, Post, Req, Sse } from "@nestjs/common";
 import { UserContent } from "ai";
 
-import { Roles } from "../decorator";
-import { Role } from "../enum";
 import { ChatService, ChatStreamService } from "../service";
 import { AuthRequest } from "../type";
 
