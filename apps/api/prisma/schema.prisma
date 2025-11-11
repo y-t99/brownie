@@ -11,6 +11,9 @@ model User {
   id         Int      @id @default(autoincrement())
   uuid       String   @unique @db.Char(191)
   name       String   @db.Char(191)
+  password   String?  @db.Char(191)
+  salt       String?  @db.Char(32)
+  email      String?  @unique @db.Char(191)
   deleted    Boolean  @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

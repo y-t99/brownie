@@ -9,5 +9,8 @@
     "source.fixAll": "explicit",
     "source.fixAll.eslint": "explicit"
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "cSpell.words": [
+    "metatype"
+  ]
 }
