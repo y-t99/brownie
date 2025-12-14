@@ -1,66 +1,122 @@
 # Brownie API
 
-A NestJS-based API server for the Brownie project.
+A NestJS-based backend API service for the Brownie platform, providing comprehensive authentication, chat, and task management capabilities.
 
-## Description
+## Features Overview
 
-This is the backend API service built with [NestJS](https://nestjs.com/), providing RESTful endpoints for the Brownie application.
+### 1. Authentication & Authorization
+- **JWT-based Authentication**: Secure token-based authentication system using `@nestjs/jwt`
+- **User Registration & Login**: 
+  - `POST /api/auth/signup` - User registration
+  - `POST /api/auth/signin` - User login
+- **Role-Based Access Control (RBAC)**: Support for User and Admin roles
+- **Guards & Decorators**:
+  - `AuthGuard` - JWT token verification and request authentication
+  - `RoleGuard` - Role-based authorization
+  - `@Public()` decorator - Mark endpoints as publicly accessible
+  - `@Roles()` decorator - Restrict endpoints to specific roles
 
-## Installation
+### 2. Chat System
+- **Session Management**: Create and manage chat sessions with unique UUIDs
+- **Message Handling**: 
+  - `GET /api/chat/session/:sessionUuid` - Retrieve chat session details
+  - `POST /api/chat/session/:sessionUuid/message` - Submit user messages
+- **Real-time Streaming**: 
+  - `SSE /api/chat/session/:sessionUuid/message/:messageUuid/assistant/stream` - Server-Sent Events for streaming assistant responses
+- **Message Roles**: Support for system, user, assistant, and tool messages
+- **Message States**: Track message lifecycle (executing, processing, pending, success, paused, error)
+- **Message Blocks**: Structured content storage with JSON support
 
+### 3. Task Management
+- **Task Creation & Storage**: Store tasks with metadata and payload
+- **Resource Relations**: Link tasks with related resources through `TaskResourceRelation` model
+- **Task Triggers**: 
+  - `POST /api/task/trigger/callback/:state` - Admin-only task trigger callbacks
+- **Integration with Trigger.dev**: Uses `@brownie/task` package for background job processing
+
+### 4. Internal Administration
+Admin-only endpoints for system management:
+- **Message Specification Retrieval**: 
+  - `GET /api/internal/session/:sessionUuid/message/:messageUuid/specification/:specification`
+- **Context Curation**: 
+  - `POST /api/internal/context/curation` - Manage user context and memory
+
+### 5. Database & Data Persistence
+- **PostgreSQL Database**: Using Prisma ORM
+- **Models**:
+  - `User` - User accounts with password hashing and salt
+  - `ChatSession` - Chat session records
+  - `ChatMessage` - Individual messages with role and status
+  - `ChatMessageBlock` - Message content blocks
+  - `Task` - Task definitions and metadata
+  - `TaskResourceRelation` - Task-resource associations
+- **Soft Delete Support**: Logical deletion with `deleted` flag
+- **Audit Trail**: Automatic tracking of created_at, updated_at, created_by, updated_by
+
+### 6. Middleware & Validation
+- **Global Validation Pipe**: Input validation using `class-validator` and `class-transformer`
+- **CORS Enabled**: Cross-Origin Resource Sharing support
+- **Global API Prefix**: All endpoints prefixed with `/api`
+
+### 7. Infrastructure
+- **Docker Support**: Dockerfile included for containerized deployment
+- **Environment Configuration**: Using `@nestjs/config` for environment variable management
+- **Database Migrations**: Prisma migrations for schema version control
+- **Port Configuration**: Configurable port (default: 3001)
+
+## Technology Stack
+- **Framework**: NestJS 11.x
+- **Language**: TypeScript
+- **ORM**: Prisma 6.x
+- **Database**: PostgreSQL
+- **Authentication**: JWT (@nestjs/jwt)
+- **Runtime**: Node.js
+- **Package Manager**: pnpm (workspace)
+- **AI Integration**: Vercel AI SDK
+
+## API Endpoints Summary
+
+### Public Endpoints
+- `POST /api/auth/signup` - User registration
+- `POST /api/auth/signin` - User login
+
+### Protected Endpoints (Authenticated Users)
+- `GET /api/chat/session/:sessionUuid` - Get chat session
+- `POST /api/chat/session/:sessionUuid/message` - Send message
+- `SSE /api/chat/session/:sessionUuid/message/:messageUuid/assistant/stream` - Stream assistant response
+
+### Admin-Only Endpoints
+- `POST /api/task/trigger/callback/:state` - Task trigger callback
+- `GET /api/internal/session/:sessionUuid/message/:messageUuid/specification/:specification` - Get message specification
+- `POST /api/internal/context/curation` - Context curation
+
+## Development Commands
 ```bash
-# Install dependencies from the root of the monorepo
-pnpm install
-```
-
-## Running the app
-
-```bash
-# Development mode
+# Development
 pnpm dev
 
-# Production mode
+# Build
+pnpm build
+
+# Production
 pnpm start:prod
-```
 
-## Test
+# Database
+pnpm prisma-generate
 
-```bash
-# Unit tests
+# Testing
 pnpm test
-
-# E2E tests
 pnpm test:e2e
 
-# Test coverage
-pnpm test:cov
+# Linting
+pnpm lint
 ```
 
-## API Endpoints
-
-- `GET /api` - Welcome message
-- `GET /api/health` - Health check endpoint
-
-## Environment Variables
-
-Copy `.env.example` to `.env` and configure the following variables:
-
-- `PORT` - Server port (default: 3001)
-- `NODE_ENV` - Environment (development/production)
-
-## Project Structure
-
-```
-src/
-├── app.controller.ts    # Main application controller
-├── app.module.ts        # Root application module
-├── app.service.ts       # Main application service
-└── main.ts             # Application entry point
-```
-
-## Development
-
-The API server runs on `http://localhost:3001` by default with the `/api` prefix.
-
-All endpoints are prefixed with `/api`, so the health check endpoint would be available at:
-`http://localhost:3001/api/health`
+## Architecture Highlights
+- **Modular Design**: Separated controllers, services, and middleware
+- **Dependency Injection**: Leveraging NestJS DI container
+- **Type Safety**: Full TypeScript implementation
+- **Scalable Structure**: Organized by feature domains (auth, chat, task, user)
+- **Security First**: JWT authentication, role-based access control, input validation
+- **Real-time Capabilities**: SSE for streaming responses
+- **Extensible**: Easy to add new features and modules

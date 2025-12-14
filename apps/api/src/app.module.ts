@@ -24,10 +24,11 @@ import {
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     JwtModule.registerAsync({
       global: true,
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get("JWT_SECRET"),
         signOptions: { expiresIn: configService.get("JWT_EXPIRES_IN") },

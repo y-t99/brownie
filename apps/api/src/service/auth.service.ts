@@ -39,9 +39,10 @@ export class AuthService {
     }
 
     const isPassValid = await this.userService.comparePassword(
+      userRecord.uuid,
       input.password,
-      userRecord.password,
     );
+
     if (!isPassValid) {
       throw new HttpException(
         ERROR_MESSAGE.InvalidCredentials,

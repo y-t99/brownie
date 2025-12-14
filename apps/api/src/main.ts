@@ -2,7 +2,11 @@ import { NestFactory, Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 
 import { AppModule } from "./app.module";
-import { AuthGuard, RoleGuard, ValidationPipe } from "./middleware";
+import {
+  AuthGuard,
+  RoleGuard,
+  ValidationPipe,
+} from "./middleware";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

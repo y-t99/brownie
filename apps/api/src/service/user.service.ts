@@ -1,10 +1,11 @@
 import * as Crypto from "node:crypto";
 
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { Prisma, User } from "@prisma/client";
 
 import { PrismaService } from "../db-provider";
 import { generateUUID, UUIDType } from "../util";
+import { ERROR_MESSAGE } from "../exception";
 
 const UserProfileView: Prisma.UserSelect = {
   uuid: true,
@@ -16,17 +17,21 @@ const UserProfileView: Prisma.UserSelect = {
 
 @Injectable()
 export class UserService {
+
+  private readonly logger = new Logger(UserService.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   async create(user: Partial<User>) {
+    const uuid = generateUUID(UUIDType.USER)
     const entity = {
-      uuid: generateUUID(UUIDType.USER),
+      uuid,
       name: user.name,
       email: user.email,
       password: user.password,
       salt: null,
-      created_by: user.created_by,
-      updated_by: user.updated_by,
+      created_by: user.created_by || uuid,
+      updated_by: user.updated_by || uuid,
     };
     if (user.password) {
       const salt = Crypto.randomBytes(16).toString("hex");
@@ -36,13 +41,23 @@ export class UserService {
       entity.salt = salt;
       entity.password = encryptedPassword;
     }
-    const record = await this.prisma.user.create({
-      data: entity,
-      select: {
-        uuid: true,
-      },
-    });
-    return record.uuid;
+    try {
+      const record = await this.prisma.user.create({
+        data: entity,
+        select: {
+          uuid: true,
+        },
+      });
+      return record.uuid;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2002") {
+          throw new HttpException(ERROR_MESSAGE.ResourceConflict, HttpStatus.BAD_REQUEST);
+        }
+      }
+      this.logger.error(error);
+      throw new HttpException(ERROR_MESSAGE.InternalServerError, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async retrieveUserProfileByUuid(uuid: string) {
@@ -88,9 +103,9 @@ export class UserService {
     if (!userRecord) {
       return false;
     }
-    const encryptedPassword = Crypto.createHmac("sha512", userRecord.salt)
+    const encryptedPassword = Crypto.createHmac("sha512", userRecord.salt.trim())
       .update(password)
       .digest("hex");
-    return encryptedPassword === userRecord.password;
+    return encryptedPassword === userRecord.password.trim();
   }
 }
