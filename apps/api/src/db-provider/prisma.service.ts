@@ -1,10 +1,10 @@
-import type { OnModuleInit } from '@nestjs/common';
-import { Injectable, Logger } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import type { OnModuleInit } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 @Injectable()
 export class PrismaService
-  extends PrismaClient<Prisma.PrismaClientOptions, 'query'>
+  extends PrismaClient<Prisma.PrismaClientOptions, "query">
   implements OnModuleInit
 {
   private readonly logger = new Logger(PrismaService.name);
@@ -13,24 +13,25 @@ export class PrismaService
     const logConfig = {
       log: [
         {
-          level: 'query',
-          emit: 'event',
+          level: "query",
+          emit: "event",
         },
         {
-          level: 'error',
-          emit: 'stdout',
+          level: "error",
+          emit: "stdout",
         },
         {
-          level: 'info',
-          emit: 'stdout',
+          level: "info",
+          emit: "stdout",
         },
         {
-          level: 'warn',
-          emit: 'stdout',
+          level: "warn",
+          emit: "stdout",
         },
       ],
     };
-    const initialConfig = process.env.NODE_ENV === 'production' ? {} : { ...logConfig };
+    const initialConfig =
+      process.env.NODE_ENV === "production" ? {} : { ...logConfig };
 
     super(initialConfig);
   }
@@ -38,9 +39,9 @@ export class PrismaService
   async onModuleInit() {
     await this.$connect();
 
-    if (process.env.NODE_ENV === 'production') return;
+    if (process.env.NODE_ENV === "production") return;
 
-    this.$on('query', async (e) => {
+    this.$on("query", async (e) => {
       this.logger.debug({
         Query: e.query,
         Params: e.params,

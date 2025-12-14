@@ -1,1 +1,1 @@
-export * from './auth.ro';
+export * from "./auth.ro";

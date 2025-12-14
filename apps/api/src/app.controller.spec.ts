@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from "@nestjs/testing";
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
 
-describe('AppController', () => {
+describe("AppController", () => {
   let _appController: AppController;
 
   beforeEach(async () => {
@@ -14,5 +14,4 @@ describe('AppController', () => {
 
     _appController = app.get<AppController>(AppController);
   });
-
 });

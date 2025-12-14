@@ -1,10 +1,10 @@
-import * as Crypto from 'node:crypto';
+import * as Crypto from "node:crypto";
 
-import { Injectable } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
+import { Injectable } from "@nestjs/common";
+import { Prisma, User } from "@prisma/client";
 
-import { PrismaService } from '../db-provider';
-import { generateUUID, UUIDType } from '../util';
+import { PrismaService } from "../db-provider";
+import { generateUUID, UUIDType } from "../util";
 
 const UserProfileView: Prisma.UserSelect = {
   uuid: true,
@@ -12,11 +12,10 @@ const UserProfileView: Prisma.UserSelect = {
   email: true,
   created_at: true,
   updated_at: true,
-}
+};
 
 @Injectable()
 export class UserService {
-
   constructor(private readonly prisma: PrismaService) {}
 
   async create(user: Partial<User>) {
@@ -28,12 +27,12 @@ export class UserService {
       salt: null,
       created_by: user.created_by,
       updated_by: user.updated_by,
-    }
+    };
     if (user.password) {
-      const salt = Crypto.randomBytes(16).toString('hex');
-      const encryptedPassword = Crypto.createHmac('sha512', salt)
+      const salt = Crypto.randomBytes(16).toString("hex");
+      const encryptedPassword = Crypto.createHmac("sha512", salt)
         .update(user.password)
-        .digest('hex');
+        .digest("hex");
       entity.salt = salt;
       entity.password = encryptedPassword;
     }
@@ -41,7 +40,7 @@ export class UserService {
       data: entity,
       select: {
         uuid: true,
-      }
+      },
     });
     return record.uuid;
   }
@@ -58,7 +57,7 @@ export class UserService {
     }
     return {
       ...userRecord,
-    }
+    };
   }
 
   async retrieveUserProfileByEmail(email: string) {
@@ -73,7 +72,7 @@ export class UserService {
     }
     return {
       ...userRecord,
-    }
+    };
   }
 
   async comparePassword(uuid: string, password: string) {
@@ -89,9 +88,9 @@ export class UserService {
     if (!userRecord) {
       return false;
     }
-    const encryptedPassword = Crypto.createHmac('sha512', userRecord.salt)
-        .update(password)
-        .digest('hex');
+    const encryptedPassword = Crypto.createHmac("sha512", userRecord.salt)
+      .update(password)
+      .digest("hex");
     return encryptedPassword === userRecord.password;
   }
 }

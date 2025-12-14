@@ -1,3 +1,3 @@
 export enum TaskResourceType {
-  CHAT_MESSAGE = 'chat-message',
+  CHAT_MESSAGE = "chat-message",
 }

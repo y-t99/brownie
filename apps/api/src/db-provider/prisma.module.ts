@@ -1,9 +1,7 @@
- 
- 
-import type { Provider } from '@nestjs/common';
-import { Module } from '@nestjs/common';
+import type { Provider } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 
-import { PrismaService } from './prisma.service';
+import { PrismaService } from "./prisma.service";
 
 export const PrismaProvider: Provider = {
   provide: PrismaService,

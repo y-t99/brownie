@@ -1,10 +1,10 @@
-import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import request from 'supertest';
+import { INestApplication } from "@nestjs/common";
+import { Test, TestingModule } from "@nestjs/testing";
+import request from "supertest";
 
-import { AppModule } from './../src/app.module';
+import { AppModule } from "./../src/app.module";
 
-describe('AppController (e2e)', () => {
+describe("AppController (e2e)", () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -16,19 +16,19 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it("/ (GET)", () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get("/")
       .expect(200)
-      .expect('Hello World! Welcome to Brownie API 🍫');
+      .expect("Hello World! Welcome to Brownie API 🍫");
   });
 
-  it('/health (GET)', () => {
+  it("/health (GET)", () => {
     return request(app.getHttpServer())
-      .get('/health')
+      .get("/health")
       .expect(200)
       .expect((res) => {
-        expect(res.body.status).toBe('ok');
+        expect(res.body.status).toBe("ok");
         expect(res.body.timestamp).toBeDefined();
       });
   });

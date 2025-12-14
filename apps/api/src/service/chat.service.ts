@@ -1,15 +1,24 @@
-import { tasks } from '@brownie/task';
-import { BadRequestException, Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { ChatMessageBlock, Prisma } from '@prisma/client';
-import { AssistantContent, ModelMessage, ToolContent, UserContent } from 'ai';
+import { tasks } from "@brownie/task";
+import {
+  BadRequestException,
+  Injectable,
+  ServiceUnavailableException,
+} from "@nestjs/common";
+import { ChatMessageBlock, Prisma } from "@prisma/client";
+import { AssistantContent, ModelMessage, ToolContent, UserContent } from "ai";
 
-import {  PrismaService } from '../db-provider';
-import { Agent, ChatMessageRole, ChatMessageSpecification, ChatMessageStatus, TaskResourceType } from '../enum';
-import { generateUUID, UUIDType } from '../util';
+import { PrismaService } from "../db-provider";
+import {
+  Agent,
+  ChatMessageRole,
+  ChatMessageSpecification,
+  ChatMessageStatus,
+  TaskResourceType,
+} from "../enum";
+import { generateUUID, UUIDType } from "../util";
 
 @Injectable()
 export class ChatService {
-
   constructor(private readonly prisma: PrismaService) {}
 
   async createChatSession(userId: string) {
@@ -24,7 +33,11 @@ export class ChatService {
     return chatSession;
   }
 
-  async submitInstruction(userId: string, sessionUuid: string, message: UserContent) {
+  async submitInstruction(
+    userId: string,
+    sessionUuid: string,
+    message: UserContent,
+  ) {
     await this.prisma.$transaction(async (tx) => {
       const chatMessage = await tx.chatMessage.create({
         data: {
@@ -65,8 +78,8 @@ export class ChatService {
         data: {
           uuid: generateUUID(UUIDType.TASK),
           title: Agent.FRONT_OFFICE_ASSISTANT,
-          meta: { },
-          payload: { },
+          meta: {},
+          payload: {},
           created_by: userId,
           updated_by: userId,
         },
@@ -82,7 +95,6 @@ export class ChatService {
           updated_by: userId,
         },
       });
-
 
       const payload = {
         chat_session_uuid: sessionUuid,
@@ -100,11 +112,11 @@ export class ChatService {
           payload: payload,
         },
       });
-    })
+    });
 
     return;
   }
-  
+
   async chatSessionMessageHistory(sessionUuid: string) {
     const chatMessage = await this.prisma.chatMessage.findMany({
       where: {
@@ -131,7 +143,9 @@ export class ChatService {
       };
     });
     chatMessageBlock.forEach((block) => {
-      const message = history.find((message) => message.uuid === block.message_uuid);
+      const message = history.find(
+        (message) => message.uuid === block.message_uuid,
+      );
       if (message) {
         message.blocks.push(block);
       }
@@ -174,10 +188,14 @@ export class ChatService {
       chatSession,
       chatMessages,
       chatMessageBlocks,
-    }
+    };
   }
 
-  async specificMessageSpecification(sessionUuid: string, messageUuid: string, specification: string) {
+  async specificMessageSpecification(
+    sessionUuid: string,
+    messageUuid: string,
+    specification: string,
+  ) {
     const chatMessage = await this.prisma.chatMessage.findUnique({
       where: {
         session_uuid: sessionUuid,
@@ -191,37 +209,52 @@ export class ChatService {
     });
 
     if (specification === ChatMessageSpecification.VERCEL) {
-      let result: ModelMessage
+      let result: ModelMessage;
       if (chatMessage.role === ChatMessageRole.SYSTEM) {
         result = {
           role: chatMessage.role,
-          content: chatMessageBlocks.map((block) => block.content as unknown as string).join('\n'),
-        }
+          content: chatMessageBlocks
+            .map((block) => block.content as unknown as string)
+            .join("\n"),
+        };
       } else if (chatMessage.role === ChatMessageRole.USER) {
         result = {
           role: chatMessage.role,
-          content: chatMessageBlocks.length === 1 && typeof chatMessageBlocks[0].content === 'string' ? chatMessageBlocks[0].content : chatMessageBlocks.map((block) => block.content) as unknown as UserContent,
-        }
+          content:
+            chatMessageBlocks.length === 1 &&
+            typeof chatMessageBlocks[0].content === "string"
+              ? chatMessageBlocks[0].content
+              : (chatMessageBlocks.map(
+                  (block) => block.content,
+                ) as unknown as UserContent),
+        };
       } else if (chatMessage.role === ChatMessageRole.ASSISTANT) {
         result = {
           role: chatMessage.role,
-          content: chatMessageBlocks.length === 1 && typeof chatMessageBlocks[0].content === 'string' ? chatMessageBlocks[0].content : chatMessageBlocks.map((block) => block.content) as unknown as AssistantContent,
-        }
+          content:
+            chatMessageBlocks.length === 1 &&
+            typeof chatMessageBlocks[0].content === "string"
+              ? chatMessageBlocks[0].content
+              : (chatMessageBlocks.map(
+                  (block) => block.content,
+                ) as unknown as AssistantContent),
+        };
       } else if (chatMessage.role === ChatMessageRole.TOOL) {
         result = {
           role: chatMessage.role,
-          content: chatMessageBlocks.map((block) => block.content) as unknown as ToolContent,
-        }
+          content: chatMessageBlocks.map(
+            (block) => block.content,
+          ) as unknown as ToolContent,
+        };
       } else {
-        throw new ServiceUnavailableException()
+        throw new ServiceUnavailableException();
       }
-      
+
       return result;
     } else {
-      throw new BadRequestException()
+      throw new BadRequestException();
     }
   }
 
-  async contextCuration(filters: unknown) {
-  }
+  async contextCuration(filters: unknown) {}
 }

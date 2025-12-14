@@ -1,9 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { User } from "@prisma/client";
 
-import { ERROR_MESSAGE } from '../exception';
-import { UserService } from './user.service';
+import { ERROR_MESSAGE } from "../exception";
+import { UserService } from "./user.service";
 
 @Injectable()
 export class AuthService {
@@ -12,7 +12,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signup(input: Partial<Pick<User, 'name' | 'password' | 'email'>>) {
+  async signup(input: Partial<Pick<User, "name" | "password" | "email">>) {
     const uuid = await this.userService.create(input);
     const userProfile = await this.userService.retrieveUserProfileByUuid(uuid);
     const token = await this.jwtService.signAsync({
@@ -26,16 +26,27 @@ export class AuthService {
     return token;
   }
 
-  async signin(input: Required<Pick<User, 'email' | 'password'>>) {
-    const userRecord = await this.userService.retrieveUserProfileByEmail(input.email);
-    
+  async signin(input: Required<Pick<User, "email" | "password">>) {
+    const userRecord = await this.userService.retrieveUserProfileByEmail(
+      input.email,
+    );
+
     if (!userRecord) {
-      throw new HttpException(ERROR_MESSAGE.ResourceNotFound, HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        ERROR_MESSAGE.ResourceNotFound,
+        HttpStatus.NOT_FOUND,
+      );
     }
 
-    const isPassValid = await this.userService.comparePassword(input.password, userRecord.password);
+    const isPassValid = await this.userService.comparePassword(
+      input.password,
+      userRecord.password,
+    );
     if (!isPassValid) {
-      throw new HttpException(ERROR_MESSAGE.InvalidCredentials, HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        ERROR_MESSAGE.InvalidCredentials,
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const token = await this.jwtService.signAsync({
@@ -50,4 +61,3 @@ export class AuthService {
     return token;
   }
 }
-
