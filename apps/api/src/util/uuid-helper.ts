@@ -4,6 +4,7 @@ export const UUIDType = {
   CHAT_SESSION: "cs",
   CHAT_MESSAGE: "cm",
   CHAT_MESSAGE_BLOCK: "cmb",
+  IMAGE: "img",
   TASK: "tsk",
   TASK_RESOURCE_RELATION: "trr",
   USER: "usr",

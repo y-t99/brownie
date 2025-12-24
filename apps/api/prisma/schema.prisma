@@ -77,6 +77,7 @@ model Task {
   title      String   @db.Char(32)
   meta       Json     @db.Json
   payload    Json     @db.Json
+  status     String   @db.Char(32)
   deleted    Boolean  @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -102,4 +103,24 @@ model TaskResourceRelation {
   @@index([task_uuid])
   @@index([resource_uuid])
   @@map("task_resource_relation")
+}
+
+model Image {
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @db.Char(191)
+  url          String?   @db.Char(2048)
+  thumbnail    String?   @db.Char(2048)
+  format       String?   @db.Char(32)
+  width        Int?
+  height       Int?
+  size         Int?
+  aspect_ratio String?   @db.Char(32)
+  resolution   String?   @db.Char(32)
+  deleted      Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  created_by   String   @db.Char(191)
+  updated_by   String   @db.Char(191)
+
+  @@map("image")
 }
