@@ -1,6 +1,6 @@
 import { generateObject, LanguageModel,ModelMessage } from "ai";
 import { fromPromise } from "xstate";
-import z from "zod";
+import { z } from "zod/v4";
 
 import { getCurrentDate, REFLECTION_INSTRUCTIONS } from "@/prompt";
 import { format, getResearchTopic } from "@/util";

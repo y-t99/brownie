@@ -23,7 +23,7 @@
     "@brownie/typescript-config": "workspace:*"
   },
   "dependencies": {
-    "ai": "^5.0.21",
-    "zod": "^3.25.56"
+    "ai": "catalog:",
+    "zod": "catalog:"
   }
 }

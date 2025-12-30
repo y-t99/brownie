@@ -1,6 +1,6 @@
 import { tool } from "ai";
 import axios from "axios";
-import z from "zod";
+import { z } from "zod/v4";
 
 export const searchQueriesSchema = z.object({
   queries: z.array(z.string()),
@@ -28,8 +28,8 @@ export type SerpSearchOrganicResult = z.infer<
   typeof _serpSearchOrganicResultSchema
 >;
 
-export function serpSearchApiTool(apiKey: string) {
-  return tool<SerpSearchParams, SerpSearchOrganicResult[]>({
+export const serpSearchApiTool = (apiKey: string) =>
+  tool({
     description:
       "API endpoint allows you to scrape the results from Google search engine via SerpApi service.",
     inputSchema: serpSearchParamsSchema,
@@ -58,7 +58,6 @@ export function serpSearchApiTool(apiKey: string) {
       }
     },
   });
-}
 
 export enum ToolName {
   SearchTool = "searchTool",

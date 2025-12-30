@@ -25,9 +25,9 @@
   "dependencies": {
     "@brownie/toolkit": "workspace:*",
     "xstate": "^5.19.4",
-    "ai": "^5.0.21",
-    "@ai-sdk/provider": "2.0.0",
-    "@ai-sdk/openai-compatible": "^1.0.11",
-    "zod": "^3.25.56"
+    "ai": "catalog:",
+    "@ai-sdk/provider": "catalog:",
+    "@ai-sdk/openai-compatible": "catalog:",
+    "zod": "catalog:"
   }
 }

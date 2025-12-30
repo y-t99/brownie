@@ -1,8 +1,7 @@
 import { tool } from "ai";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const seedream3Tool = tool({
-  name: "Seedream-3",
   description: `A native high-resolution bilingual image generation foundational model (Chinese-English). Seedream 3.0 delivers significantly enhanced capabilities: it supports native **2K resolution** output, offers faster response speeds, **generates more accurate small text, improves text layout effects**, enhances **aesthetics** and structural quality, and demonstrates excellent fidelity and detail performance.`,
   inputSchema: z.object({
     prompt: z.string().describe("The text prompt used to generate the image."),

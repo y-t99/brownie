@@ -1,6 +1,6 @@
 import { generateText, LanguageModel,ModelMessage } from "ai";
 import { fromPromise } from "xstate";
-import { ZodError } from "zod";
+import { ZodError } from "zod/v4";
 
 import { getCurrentDate, QUERY_WRITER_INSTRUCTIONS } from "@/prompt";
 import { SearchQueries, searchQueriesSchema } from "@/tool";
