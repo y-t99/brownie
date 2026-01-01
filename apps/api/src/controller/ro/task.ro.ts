@@ -1,4 +1,4 @@
-import { IsIn, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsIn, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 const VALID_ASPECT_RATIOS = ['1:1', '2:3', '3:2', '3:4', '4:3', '4:5', '5:4', '9:16', '16:9', '21:9'] as const;
 const VALID_RESOLUTIONS = ['1K', '2K', '4K'] as const;
@@ -18,4 +18,9 @@ export class T2MNanoBananaProRo {
   @IsNotEmpty()
   @IsIn(VALID_RESOLUTIONS, { message: `resolution must be one of: ${VALID_RESOLUTIONS.join(', ')}` })
   resolution: string;
+
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
+  images?: string[];
 }

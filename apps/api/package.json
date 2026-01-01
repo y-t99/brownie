@@ -23,6 +23,9 @@
     "prisma-migrate": "prisma migrate dev"
   },
   "dependencies": {
+    "@ai-sdk/google": "catalog:",
+    "@aws-sdk/client-s3": "^3.958.0",
+    "@aws-sdk/s3-request-presigner": "^3.958.0",
     "@brownie/task": "workspace:*",
     "@nestjs/common": "^11.1.6",
     "@nestjs/config": "^4.0.2",

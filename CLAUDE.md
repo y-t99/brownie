@@ -1,3 +1,22 @@
+<!-- OPENSPEC:START -->
+# OpenSpec Instructions
+
+These instructions are for AI assistants working in this project.
+
+Always open `@/openspec/AGENTS.md` when the request:
+- Mentions planning or proposals (words like proposal, spec, change, plan)
+- Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
+- Sounds ambiguous and you need the authoritative spec before coding
+
+Use `@/openspec/AGENTS.md` to learn:
+- How to create and apply change proposals
+- Spec format and conventions
+- Project structure and guidelines
+
+Keep this managed block so 'openspec update' can refresh the instructions.
+
+<!-- OPENSPEC:END -->
+
 # Core Coding Philosophy
 ## 1. Simplicity & Power
 - Write concise, powerful code that does exactly what's needed—no more, no less
@@ -9,6 +28,12 @@
 - Use industry best practices for naming conventions and messaging
 - Error messages should be clear, professional, and follow established patterns
 - Names should be self-documenting and unambiguous
+- Follow industry-standard naming semantics for all identifiers:
+  - Choose names that reflect domain concepts and business intent, not technical implementation
+  - Use established terminology from the relevant domain
+  - Prefer names commonly used in the ecosystem and best practices
+  - Avoid overly specific or coupled names that expose implementation details
+  - When in doubt, reference official documentation, popular libraries, or authoritative style guides for naming inspiration
 
 ## 3. Data Integrity
 - Related operations must be atomic—succeed together or fail together

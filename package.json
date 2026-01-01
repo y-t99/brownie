@@ -12,6 +12,7 @@
     "test:api": "turbo run test --filter=@brownie/api"
   },
   "devDependencies": {
+    "@fission-ai/openspec": "^0.17.2",
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
@@ -27,7 +28,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "dotenv": "^16.5.0",
-    "axios": "^1.9.0"
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0"
   }
 }

@@ -14,6 +14,7 @@ import {
   ChatMessageSpecification,
   ChatMessageStatus,
   TaskResourceType,
+  TaskStatus,
 } from "../enum";
 import { generateUUID, UUIDType } from "../util";
 
@@ -80,6 +81,7 @@ export class ChatService {
           title: Agent.FRONT_OFFICE_ASSISTANT,
           meta: {},
           payload: {},
+          status: TaskStatus.PENDING as string,
           created_by: userId,
           updated_by: userId,
         },

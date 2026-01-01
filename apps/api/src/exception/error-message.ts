@@ -4,4 +4,5 @@ export const ERROR_MESSAGE = {
   InvalidCredentials: "The credentials you provided are invalid.",
   ValidationFailed: "The input data is not valid.",
   ResourceConflict: "The resource you are trying to create already exists.",
+  ResourceGenerationFailed: "Resource generation failed.",
 };

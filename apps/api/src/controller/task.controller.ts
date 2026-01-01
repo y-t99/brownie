@@ -27,4 +27,15 @@ export class TaskController {
       created_by: req.user.uuid,
     });
   }
+
+  @Post("image2image/nano-banana-pro")
+  async nanoBananaProI2M(
+    @Req() req: AuthRequest,
+    @Body() body: T2MNanoBananaProRo,
+  ) {
+    return this.taskService.createNanoBananaProTask({
+      ...body,
+      created_by: req.user.uuid,
+    });
+  }
 }
