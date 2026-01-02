@@ -5,4 +5,7 @@ export const ERROR_MESSAGE = {
   ValidationFailed: "The input data is not valid.",
   ResourceConflict: "The resource you are trying to create already exists.",
   ResourceGenerationFailed: "Resource generation failed.",
+  InsufficientBalance: "Insufficient balance to complete operation",
+  TransactionNotFound: "Transaction not found",
+  QuotaNotFound: "User quota not found",
 };

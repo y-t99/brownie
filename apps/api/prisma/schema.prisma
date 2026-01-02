@@ -124,3 +124,41 @@ model Image {
 
   @@map("image")
 }
+
+model SubscriptionQuota {
+  id                Int      @id @default(autoincrement())
+  uuid              String   @unique @default(uuid()) @db.Char(191)
+  balance           Decimal  @default(0) @db.Decimal(18, 4)
+  locked_balance    Decimal  @default(0) @db.Decimal(18, 4)
+  total_spent       Decimal  @default(0) @db.Decimal(18, 4)
+  warning_threshold Decimal  @default(0) @db.Decimal(18, 4)
+  deleted           Boolean  @default(false)
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+  created_by        String   @unique @db.Char(191)
+  updated_by        String   @db.Char(191)
+
+  @@index([created_by])
+  @@map("subscription_quota")
+}
+
+model SubscriptionTransaction {
+  id                 Int      @id @default(autoincrement())
+  uuid               String   @unique @default(uuid()) @db.Char(191)
+  external_id        String?  @unique @db.Char(191)
+  parent_uuid        String?  @db.Char(191)
+  transaction_type   String   @db.Char(32)
+  transaction_status String   @db.Char(32)
+  change_amount      Decimal  @db.Decimal(18, 4)
+  balance_snapshot   Decimal  @db.Decimal(18, 4)
+  remark             String?  @db.Char(191)
+  deleted            Boolean  @default(false)
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+  created_by         String   @db.Char(191)
+  updated_by         String   @db.Char(191)
+
+  @@index([created_by])
+  @@index([external_id])
+  @@map("subscription_transaction")
+}

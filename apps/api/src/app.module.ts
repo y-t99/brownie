@@ -18,6 +18,7 @@ import {
   AuthService,
   ChatService,
   ChatStreamService,
+  QuotaTransactionCoordinatorService,
   TaskService,
   UserService,
 } from "./service";
@@ -48,6 +49,7 @@ import {
     AuthService,
     ChatService,
     ChatStreamService,
+    QuotaTransactionCoordinatorService,
     TaskService,
     UserService,
     {

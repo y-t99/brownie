@@ -33,6 +33,9 @@ A NestJS-based backend API service for the Brownie platform, providing comprehen
 - **Task Triggers**: 
   - `POST /api/task/trigger/callback/:state` - Admin-only task trigger callbacks
 - **Integration with Trigger.dev**: Uses `@brownie/task` package for background job processing
+- **Quota & Credits**:
+  - AI tasks are pre-charged via a quota lock before execution, then settled on success or rolled back on failure
+  - Insufficient balance results in a `400 Bad Request` without creating a task
 
 ### 4. Internal Administration
 Admin-only endpoints for system management:

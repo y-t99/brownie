@@ -4,8 +4,10 @@ import { ConfigService } from "@nestjs/config";
 import { generateText, ModelMessage } from "ai";
 
 import { PrismaService } from "../db-provider";
+import { IMAGE_TO_IMAGE_COST, TEXT_TO_IMAGE_COST } from "../constants";
 import { ChatMessageRole, TaskResourceType, TaskStatus, TaskTitle } from "../enum";
 import { ERROR_MESSAGE } from "../exception";
+import { QuotaTransactionCoordinatorService } from "./quota-transaction-coordinator.service";
 import {
   generateStorageKey,
   generateUUID,
@@ -100,6 +102,7 @@ export class TaskService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
+    private readonly quotaTransactionCoordinatorService: QuotaTransactionCoordinatorService,
   ) {
     // Initialize Google Generative AI provider
     this.google = createGoogleGenerativeAI({
@@ -111,35 +114,40 @@ export class TaskService {
     const taskUuid = generateUUID(UUIDType.TASK);
     const dimensions = getImageDimensions(input.aspect_ratio, input.resolution);
     const isImageToImage = !!input.images && input.images.length > 0;
+    const cost = isImageToImage ? IMAGE_TO_IMAGE_COST : TEXT_TO_IMAGE_COST;
 
-    // Step 1: Create task
-    await this.prisma.task.create({
-      data: {
-        uuid: taskUuid,
-        title: isImageToImage ? TaskTitle.IMAGE_TO_IMAGE : TaskTitle.TEXT_TO_IMAGE,
-        meta: {},
-        payload: {
-          prompt: input.prompt,
-          aspect_ratio: input.aspect_ratio,
-          resolution: input.resolution,
-          ...(isImageToImage && { images: input.images }),
-        },
-        status: TaskStatus.PENDING as string,
-        created_by: input.created_by,
-        updated_by: input.created_by,
-      },
-    });
+    await this.quotaTransactionCoordinatorService.preDeduct(input.created_by, cost, taskUuid);
 
-    // Step 3: Update task status to processing
-    await this.prisma.task.update({
-      where: { uuid: taskUuid },
-      data: {
-        status: TaskStatus.PROCESSING as string,
-        updated_by: input.created_by,
-      },
-    });
-
+    let taskCreated = false;
     try {
+      // Step 1: Create task
+      await this.prisma.task.create({
+        data: {
+          uuid: taskUuid,
+          title: isImageToImage ? TaskTitle.IMAGE_TO_IMAGE : TaskTitle.TEXT_TO_IMAGE,
+          meta: {},
+          payload: {
+            prompt: input.prompt,
+            aspect_ratio: input.aspect_ratio,
+            resolution: input.resolution,
+            ...(isImageToImage && { images: input.images }),
+          },
+          status: TaskStatus.PENDING as string,
+          created_by: input.created_by,
+          updated_by: input.created_by,
+        },
+      });
+      taskCreated = true;
+
+      // Step 3: Update task status to processing
+      await this.prisma.task.update({
+        where: { uuid: taskUuid },
+        data: {
+          status: TaskStatus.PROCESSING as string,
+          updated_by: input.created_by,
+        },
+      });
+
       const messages: ModelMessage[] = [];
       messages.push({
         role: ChatMessageRole.USER,
@@ -254,18 +262,31 @@ export class TaskService {
         },
       });
 
+      await this.quotaTransactionCoordinatorService.settle(taskUuid);
+
       this.logger.log(`${isImageToImage ? 'Image to image' : 'Text to image'} generation completed successfully for task ${taskUuid}`);
     } catch (error) {
+      try {
+        await this.quotaTransactionCoordinatorService.rollback(taskUuid, error instanceof Error ? error.message : undefined);
+      } catch (rollbackError) {
+        this.logger.error(
+          `Failed to rollback quota for task ${taskUuid}:`,
+          rollbackError,
+        );
+      }
+
       // Step 7: On failure, update task status to failed
       this.logger.error(`Failed to generate image for task ${taskUuid}:`, error);
 
-      await this.prisma.task.update({
-        where: { uuid: taskUuid },
-        data: {
-          status: TaskStatus.FAILED as string,
-          updated_by: input.created_by,
-        },
-      });
+      if (taskCreated) {
+        await this.prisma.task.update({
+          where: { uuid: taskUuid },
+          data: {
+            status: TaskStatus.FAILED as string,
+            updated_by: input.created_by,
+          },
+        });
+      }
 
       throw new BadRequestException(ERROR_MESSAGE.ResourceGenerationFailed);
     }
