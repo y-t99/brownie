@@ -3,11 +3,10 @@ import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { generateText, ModelMessage } from "ai";
 
-import { PrismaService } from "../db-provider";
 import { IMAGE_TO_IMAGE_COST, TEXT_TO_IMAGE_COST } from "../constants";
+import { PrismaService } from "../db-provider";
 import { ChatMessageRole, TaskResourceType, TaskStatus, TaskTitle } from "../enum";
 import { ERROR_MESSAGE } from "../exception";
-import { QuotaTransactionCoordinatorService } from "./quota-transaction-coordinator.service";
 import {
   generateStorageKey,
   generateUUID,
@@ -19,6 +18,7 @@ import {
   StorageKeyPrefix,
   UUIDType,
 } from "../util";
+import { QuotaTransactionCoordinatorService } from "./quota-transaction-coordinator.service";
 
 interface NanoBananaProInput {
   prompt: string;

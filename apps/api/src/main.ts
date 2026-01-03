@@ -11,8 +11,14 @@ import {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable CORS
-  app.enableCors();
+  const corsOrigins =
+    process.env.CORS_ORIGINS?.split(",").map((s) => s.trim()).filter(Boolean) ??
+    [];
+
+  app.enableCors({
+    origin: corsOrigins.length > 0 ? corsOrigins : true,
+    credentials: true,
+  });
 
   // Global prefix
   app.setGlobalPrefix("api");

@@ -31,7 +31,9 @@ export class PrismaService
       ],
     };
     const initialConfig =
-      process.env.NODE_ENV === "production" ? {} : { ...logConfig };
+      process.env.NODE_ENV === "production"
+        ? {}
+        : logConfig;
 
     super(initialConfig);
   }

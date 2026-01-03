@@ -28,6 +28,7 @@ describe("QuotaTransactionCoordinatorService", () => {
   };
 
   const mockPrismaService = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     $transaction: jest.fn(async (callback: any) => callback(tx)),
   };
 
