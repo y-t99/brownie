@@ -82,7 +82,7 @@ export function HeroSection({
         className={
           layout === "centered"
             ? "mx-auto flex max-w-3xl flex-col items-center text-center"
-            : "grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-14"
+            : "grid items-center gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16"
         }
       >
         <motion.div variants={containerVariants} initial="hidden" animate="show">
@@ -96,7 +96,7 @@ export function HeroSection({
 
           <motion.h1
             variants={itemVariants}
-            className="mt-6 text-balance text-5xl font-semibold tracking-tight text-text-primary md:text-6xl lg:text-7xl"
+            className="mt-6 text-balance text-5xl font-semibold tracking-tight leading-[1.1] text-text-primary md:text-6xl lg:text-7xl"
           >
             {title}
           </motion.h1>

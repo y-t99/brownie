@@ -45,7 +45,7 @@ export function ProblemSection({ title, description, problems }: ProblemSectionP
         variants={parentVariants}
         initial="hidden"
         animate="show"
-        className={cn("mt-12 grid gap-4", problems.length <= 2 ? "md:grid-cols-2" : "md:grid-cols-3")}
+        className={cn("mt-12 w-full grid gap-6", problems.length <= 2 ? "md:grid-cols-2" : "md:grid-cols-3")}
       >
         {problems.map((problem) => {
           const Icon = problem.icon ?? AlertCircle;
@@ -54,7 +54,7 @@ export function ProblemSection({ title, description, problems }: ProblemSectionP
               <Card
                 variant="elevated"
                 className={cn(
-                  "h-full transition-[transform,box-shadow] duration-300 ease-out hover:scale-[1.02] hover:shadow-[var(--ms-shadow-elevated-hover)]",
+                  "h-full overflow-hidden transition-[transform,box-shadow] duration-300 ease-out hover:scale-[1.02] hover:shadow-[var(--ms-shadow-elevated-hover)]",
                 )}
               >
                 <CardHeader className="pb-3">

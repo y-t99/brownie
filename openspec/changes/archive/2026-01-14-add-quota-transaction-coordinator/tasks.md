@@ -17,7 +17,7 @@
   - Add indexes on `created_by` and `external_id`
   - Add table mapping: `@@map("subscription_transaction")`
 
-- [ ] 1.3 Generate Prisma client and create migration
+- [-] 1.3 Generate Prisma client and create migration
   - Run `pnpm --filter @brownie/api prisma-generate`
   - Run `npx prisma migrate dev --name add-quota-transaction-coordinator`
   - Verify migration SQL includes all fields, constraints, and indexes
@@ -174,7 +174,7 @@
   - Document error responses for insufficient balance
   - Document that tasks consume credits before execution
 
-- [ ] 6.3 Create admin utilities (optional for MVP)
+- [-] 6.3 Create admin utilities (optional for MVP)
   - Script to query stuck PENDING transactions (older than 1 hour)
   - Script to manually rollback stuck transactions
   - Script to query user transaction history with parent-child relationships

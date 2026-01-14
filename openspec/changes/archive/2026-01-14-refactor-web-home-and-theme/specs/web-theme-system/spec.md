@@ -24,8 +24,6 @@ The web UI codebase SHALL prohibit ad-hoc, per-element color values in Tailwind 
 - **THEN** the contributor SHALL NOT use Tailwind arbitrary color values such as `bg-[#123456]`, `text-[rgb(1,2,3)]`, or similar one-off colors
 - **AND** the contributor SHALL use semantic Tailwind classes backed by theme tokens (e.g., `bg-canvas`, `text-text-primary`, `bg-background`, `text-muted-foreground`)
 
-## MODIFIED Requirements
-
 ### Requirement: Global Styles Apply Theme System
 
 The global stylesheet for `apps/web` SHALL apply the unified theme variables without breaking existing route layouts.
@@ -34,4 +32,3 @@ The global stylesheet for `apps/web` SHALL apply the unified theme variables wit
 - **WHEN** a user visits any `/console/**` route
 - **THEN** the console route group SHALL continue to control its own layout structure
 - **AND** only the shared theme tokens (colors/typography primitives) SHALL be applied globally
-

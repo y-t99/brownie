@@ -22,8 +22,6 @@ The system SHALL serve the Developer Console as part of the `apps/web` applicati
 - **WHEN** the user uses the console navigation header links
 - **THEN** navigation SHALL stay within the `/console/*` URL namespace
 
-## MODIFIED Requirements
-
 ### Requirement: Authentication and Session Management
 
 The console SHALL protect authenticated routes under `/console/*` and use `/console/login` for authentication.
@@ -32,4 +30,3 @@ The console SHALL protect authenticated routes under `/console/*` and use `/cons
 - **WHEN** an unauthenticated user attempts to access `/console/transactions`
 - **THEN** the user SHALL be redirected to `/console/login`
 - **AND** after successful login, SHALL be redirected back to the originally requested page
-

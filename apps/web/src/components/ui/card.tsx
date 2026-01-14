@@ -1,17 +1,53 @@
+"use client";
+
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 import { cn } from "@/lib/cn";
 
-const cardVariants = cva("rounded-card border border-surface-border bg-surface", {
+const CARD_STYLES = {
+  flat: {},
+  elevated: {
+    boxShadow: "var(--ms-shadow-elevated)",
+    background: "linear-gradient(135deg, var(--card) 0%, color-mix(in srgb, var(--card) 98%, black) 100%)",
+  },
+  "elevated-hover": {
+    default: {
+      boxShadow: "var(--ms-shadow-elevated)",
+      background: "linear-gradient(135deg, var(--card) 0%, color-mix(in srgb, var(--card) 98%, black) 100%)",
+    },
+    hover: {
+      boxShadow: "var(--ms-shadow-elevated-hover)",
+    },
+  },
+  inset: {
+    boxShadow: "inset 0 2px 6px rgba(0, 0, 0, 0.12), inset 0 1px 2px rgba(0, 0, 0, 0.08)",
+    background: "color-mix(in srgb, var(--card) 96%, black)",
+  },
+  glass: {
+    border: "1px solid color-mix(in srgb, var(--border) 45%, transparent)",
+    background: "color-mix(in srgb, var(--card) 85%, transparent)",
+  },
+  glow: {
+    default: {
+      boxShadow: "var(--ms-shadow-elevated)",
+      background: "linear-gradient(135deg, var(--card) 0%, color-mix(in srgb, var(--card) 98%, black) 100%)",
+    },
+    hover: {
+      boxShadow: "var(--ms-shadow-glow)",
+    },
+  },
+} as const;
+
+const cardVariants = cva("rounded-card border border-surface-border bg-surface transition-all duration-300 ease-[var(--ms-ease-out-expo)]", {
   variants: {
     variant: {
       flat: "",
-      elevated: "shadow-[var(--ms-shadow-elevated)]",
-      glass:
-        "border-[color:color-mix(in srgb,var(--border) 45%,transparent)] bg-[color:color-mix(in srgb,var(--card) 85%,transparent)] backdrop-blur-md",
-      glow:
-        "shadow-[var(--ms-shadow-elevated)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-[1.02] hover:shadow-[var(--ms-shadow-glow)]",
+      elevated: "",
+      "elevated-hover": "",
+      inset: "",
+      glass: "backdrop-blur-md",
+      glow: "hover:scale-[1.02]",
     },
   },
   defaultVariants: {
@@ -24,9 +60,39 @@ export interface CardProps
     VariantProps<typeof cardVariants> {}
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant, ...props }, ref) => (
-    <div ref={ref} className={cn(cardVariants({ variant, className }))} {...props} />
-  ),
+  ({ className, variant, style, ...props }, ref) => {
+    const [isHovered, setIsHovered] = React.useState(false);
+
+    const styleConfig = variant && variant !== "flat" ? CARD_STYLES[variant] : null;
+    const needsHoverState = variant === "elevated-hover" || variant === "glow";
+
+    let combinedStyle = style;
+    if (styleConfig) {
+      if (needsHoverState && "default" in styleConfig) {
+        combinedStyle = {
+          ...styleConfig.default,
+          ...(isHovered && "hover" in styleConfig ? styleConfig.hover : {}),
+          ...style,
+        };
+      } else {
+        combinedStyle = {
+          ...styleConfig,
+          ...style,
+        };
+      }
+    }
+
+    return (
+      <div
+        ref={ref}
+        className={cn(cardVariants({ variant, className }))}
+        style={combinedStyle}
+        onMouseEnter={needsHoverState ? (e) => { setIsHovered(true); props.onMouseEnter?.(e); } : props.onMouseEnter}
+        onMouseLeave={needsHoverState ? (e) => { setIsHovered(false); props.onMouseLeave?.(e); } : props.onMouseLeave}
+        {...props}
+      />
+    );
+  },
 );
 Card.displayName = "Card";
 

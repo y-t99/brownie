@@ -82,6 +82,7 @@ export default function DesignSystemPage() {
               <TabsTrigger value="components">Components</TabsTrigger>
               <TabsTrigger value="tokens">Tokens</TabsTrigger>
               <TabsTrigger value="motion">Motion</TabsTrigger>
+              <TabsTrigger value="skeuomorphism">Skeuomorphism</TabsTrigger>
             </TabsList>
 
             <TabsContent value="components" className="mt-8">
@@ -281,6 +282,118 @@ export default function DesignSystemPage() {
                     />
                   </CardContent>
                 </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="skeuomorphism" className="mt-8">
+              <div className="space-y-10">
+                {/* Card Variants Section */}
+                <section>
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-text-primary">Card Variants</h3>
+                    <p className="text-sm text-text-secondary">微拟物卡片变体：flat / elevated / elevated-hover / inset / glass / glow</p>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <Card variant="flat" className="p-4">
+                      <div className="text-sm text-text-secondary">Flat - 基本平面效果</div>
+                    </Card>
+                    <Card variant="elevated" className="p-4">
+                      <div className="text-sm text-text-secondary">Elevated - 凸起立体效果</div>
+                    </Card>
+                    <Card variant="elevated-hover" className="p-4">
+                      <div className="text-sm text-text-secondary">Elevated Hover - 悬停增强</div>
+                    </Card>
+                    <Card variant="inset" className="p-4">
+                      <div className="text-sm text-text-secondary">Inset - 内凹效果</div>
+                    </Card>
+                    <Card variant="glass" className="p-4">
+                      <div className="text-sm text-text-secondary">Glass - 毛玻璃效果</div>
+                    </Card>
+                    <Card variant="glow" className="p-4">
+                      <div className="text-sm text-text-secondary">Glow - 发光悬停</div>
+                    </Card>
+                  </div>
+                  <div className="mt-4">
+                    <CodeBlock
+                      code={`<Card variant="elevated">...</Card>
+<Card variant="inset">...</Card>
+<Card variant="glass">...</Card>`}
+                    />
+                  </div>
+                </section>
+
+                {/* Input Section */}
+                <section>
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-text-primary">Input</h3>
+                    <p className="text-sm text-text-secondary">内凹输入框：focus 时显示 ring 光环</p>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card variant="elevated" className="p-4 space-y-2">
+                      <Label htmlFor="demo-email">Email Address</Label>
+                      <Input id="demo-email" placeholder="you@example.com" />
+                    </Card>
+                    <Card variant="elevated" className="p-4 space-y-2">
+                      <Label htmlFor="demo-invalid">Invalid State</Label>
+                      <Input id="demo-invalid" placeholder="Invalid input" aria-invalid={true} />
+                    </Card>
+                  </div>
+                  <div className="mt-4">
+                    <CodeBlock code={`<Input placeholder="Email" />`} />
+                  </div>
+                </section>
+
+                {/* Badge Variants Section */}
+                <section>
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-text-primary">Badge Variants</h3>
+                    <p className="text-sm text-text-secondary">渐变徽章：primary / secondary / accent / success / error / pending / outline</p>
+                  </div>
+                  <Card variant="elevated" className="p-6">
+                    <div className="flex flex-wrap gap-3">
+                      <Badge variant="default">Primary</Badge>
+                      <Badge variant="secondary">Secondary</Badge>
+                      <Badge variant="accent">Accent</Badge>
+                      <Badge variant="success">Success</Badge>
+                      <Badge variant="pending">Pending</Badge>
+                      <Badge variant="error">Error</Badge>
+                      <Badge variant="outline">Outline</Badge>
+                    </div>
+                  </Card>
+                  <div className="mt-4">
+                    <CodeBlock code={`<Badge variant="success">Success</Badge>`} />
+                  </div>
+                </section>
+
+                {/* Design Formulas Section */}
+                <section>
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-text-primary">Formulas</h3>
+                    <p className="text-sm text-text-secondary">核心设计公式：渐变 + 阴影</p>
+                  </div>
+                  <Card variant="elevated" className="p-6 space-y-6">
+                    <div>
+                      <h4 className="mb-2 text-sm font-medium text-text-primary">三段式渐变</h4>
+                      <CodeBlock
+                        code={`background: linear-gradient(
+  135deg,
+  var(--primary) 0%,
+  color-mix(in srgb, var(--primary) 85%, black) 50%,
+  color-mix(in srgb, var(--primary) 70%, black) 100%
+);`}
+                      />
+                    </div>
+                    <div>
+                      <h4 className="mb-2 text-sm font-medium text-text-primary">三层立体阴影</h4>
+                      <CodeBlock
+                        code={`box-shadow:
+  0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent),
+  inset 0 1px 0 rgba(255,255,255,0.2),
+  inset 0 -1px 0 rgba(0,0,0,0.1);`}
+                      />
+                    </div>
+                  </Card>
+                </section>
               </div>
             </TabsContent>
           </Tabs>

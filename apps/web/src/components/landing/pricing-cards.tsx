@@ -50,14 +50,14 @@ export function PricingCards({ title, description, plans }: PricingCardsProps) {
         variants={parentVariants}
         initial="hidden"
         animate="show"
-        className="mt-12 grid gap-6 md:grid-cols-3 items-stretch"
+        className="mt-12 w-full grid gap-8 md:grid-cols-3 items-stretch"
       >
         {plans.map((plan) => (
           <motion.div key={plan.name} variants={itemVariants} className="h-full">
             <Card
               variant="elevated"
               className={cn(
-                "relative h-full flex flex-col transition-[transform,box-shadow] duration-300 ease-out",
+                "relative h-full overflow-hidden flex flex-col transition-[transform,box-shadow] duration-300 ease-out",
                 plan.recommended &&
                   "scale-105 shadow-xl ring-2 ring-primary z-10",
               )}

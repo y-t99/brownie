@@ -32,8 +32,6 @@ The `apps/web` application SHALL provide a `/design-system` page that showcases 
 - **THEN** the page SHALL render examples of core UI primitives used in the app
 - **AND** the examples SHALL use semantic theme tokens (no hardcoded colors)
 
-## MODIFIED Requirements
-
 ### Requirement: Web README Documents UI Guardrails
 
 The `apps/web/README.md` documentation SHALL include pinned UI guardrails for contributors.
@@ -44,4 +42,3 @@ The `apps/web/README.md` documentation SHALL include pinned UI guardrails for co
   - No hardcoded colors (no arbitrary Tailwind values)
   - Component-first development using `@/components/ui`
   - Framer Motion-only animations using shared easing curves
-

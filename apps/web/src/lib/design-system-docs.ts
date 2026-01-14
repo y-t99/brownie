@@ -29,8 +29,8 @@ export const COMPONENT_DOCS = {
   },
   card: {
     title: "Card",
-    description: "Flat, elevated, glass, and glow surfaces with 20px rounded corners.",
-    variants: ["flat", "elevated", "glass", "glow"] as const,
+    description: "Multiple micro-skeuomorphic variants: flat, elevated, elevated-hover, inset, glass, glow.",
+    variants: ["flat", "elevated", "elevated-hover", "inset", "glass", "glow"] as const,
     snippet: (variant: string) =>
       `<Card variant="${variant}">\n  <CardHeader>\n    <CardTitle>Card</CardTitle>\n    <CardDescription>Description</CardDescription>\n  </CardHeader>\n  <CardContent>...</CardContent>\n</Card>`,
   },
@@ -39,5 +39,12 @@ export const COMPONENT_DOCS = {
     description: "Inset depth styling with smooth transitions and accessible invalid states.",
     snippet: (invalid: boolean) =>
       `<Input placeholder="Email" aria-invalid={${invalid}} />`,
+  },
+  badge: {
+    title: "Badge",
+    description: "Gradient badges with micro-skeuomorphic shadows: primary, secondary, accent, success, error, pending, outline.",
+    variants: ["default", "secondary", "accent", "success", "error", "pending", "outline"] as const,
+    snippet: (variant: string) =>
+      `<Badge variant="${variant}">Badge</Badge>`,
   },
 } as const;

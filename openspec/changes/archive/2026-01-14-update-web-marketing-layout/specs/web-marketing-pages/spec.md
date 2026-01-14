@@ -1,6 +1,6 @@
 # Web Marketing Pages Specification
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Marketing Layout Provides Predictable Vertical Structure
 
@@ -10,8 +10,6 @@ The marketing route group in `apps/web` SHALL implement a predictable vertical l
 - **WHEN** a marketing page has short content
 - **THEN** the main content area SHALL be able to grow to fill the remaining viewport height
 - **AND** the footer SHALL remain at the bottom of the page without relying on incidental content height
-
-## ADDED Requirements
 
 ### Requirement: Marketing Home Page Uses Shared Layout Primitives
 
@@ -30,4 +28,3 @@ When the marketing home page uses the split hero layout, the text and visual col
 - **WHEN** the viewport is at or above the `lg` breakpoint
 - **THEN** the hero visual container SHALL size consistently with the grid column sizing rules
 - **AND** the visual SHALL not require `ml-auto` + `max-w-*` constraints that fight the grid layout
-

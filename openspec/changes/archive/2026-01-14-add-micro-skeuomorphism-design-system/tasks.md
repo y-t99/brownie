@@ -107,7 +107,7 @@
 - [x] 6.2 Update `app/(marketing)/layout.tsx`
   - Ensure theme variables applied
   - Verify motion presets available
-- [ ] 6.3 Test responsive layouts on mobile, tablet, desktop
+- [-] 6.3 Test responsive layouts on mobile, tablet, desktop
   - Verify typography scales correctly
   - Verify spacing adapts to breakpoints
   - Verify animations perform smoothly
@@ -126,7 +126,7 @@
   - Update form with new Input components
   - Update button with gradient variant
   - Add form validation states
-- [ ] 7.4 Test all console pages for visual consistency
+- [-] 7.4 Test all console pages for visual consistency
   - Verify no style regressions
   - Verify theme variables applied correctly
   - Verify accessibility maintained
@@ -135,18 +135,18 @@
 
 - [x] 8.1 Run type checking: `pnpm --filter web check-types`
 - [x] 8.2 Run build: `pnpm --filter web build`
-- [ ] 8.3 Test reduced motion support
+- [-] 8.3 Test reduced motion support
   - Enable `prefers-reduced-motion` in browser
   - Verify animations disabled
   - Verify final states render correctly
-- [ ] 8.4 Test color contrast ratios
+- [-] 8.4 Test color contrast ratios
   - Verify WCAG AA compliance for text
   - Verify button states meet accessibility standards
-- [ ] 8.5 Performance testing
+- [-] 8.5 Performance testing
   - Measure LCP on home page (target: <2.5s)
   - Measure animation frame rates (target: 60fps)
   - Verify no layout shifts (CLS < 0.1)
-- [ ] 8.6 Cross-browser testing
+- [-] 8.6 Cross-browser testing
   - Test in Chrome, Firefox, Safari
   - Verify CSS color-mix support (fallback if needed)
   - Verify backdrop-filter support for glass effect
@@ -155,6 +155,6 @@
 
 - [x] 9.1 Add JSDoc comments to design token utilities
 - [x] 9.2 Add JSDoc comments to motion preset functions
-- [ ] 9.3 Update component prop types with TypeScript documentation
+- [-] 9.3 Update component prop types with TypeScript documentation
 - [x] 9.4 Remove any unused dependencies
 - [x] 9.5 Update `package.json` with any new dependencies added during implementation

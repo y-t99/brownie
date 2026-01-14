@@ -147,7 +147,7 @@
   - Verify links have visible focus indicators
   - Verify form inputs have focus rings
 
-- [ ] 6.4 Test keyboard navigation
+- [-] 6.4 Test keyboard navigation
   - Verify tab order is logical
   - Verify all interactive elements are keyboard accessible
   - Verify no keyboard traps
@@ -192,7 +192,7 @@
 
 - [x] 8.2 Run build: `pnpm --filter web build`
 
-- [ ] 8.3 Test prefers-reduced-motion support
+- [-] 8.3 Test prefers-reduced-motion support
   - Enable `prefers-reduced-motion` in browser
   - Verify all animations are disabled
   - Verify final states render correctly
@@ -203,13 +203,13 @@
   - Document results
   - Used `apps/web/scripts/check-contrast.mjs` (token contrast) and recorded output in terminal
 
-- [ ] 8.5 Performance testing
+- [-] 8.5 Performance testing
   - Measure LCP on home page (target: <2.5s)
   - Measure animation frame rates (target: 60fps)
   - Verify no layout shifts (CLS < 0.1)
   - Use Lighthouse or WebPageTest
 
-- [ ] 8.6 Cross-browser testing
+- [-] 8.6 Cross-browser testing
   - Test in Chrome, Firefox, Safari
   - Verify CSS color-mix support (fallback if needed)
   - Verify backdrop-filter support for glass effect

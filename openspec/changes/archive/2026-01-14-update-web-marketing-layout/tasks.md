@@ -21,4 +21,4 @@
 - [x] 4.1 Run `pnpm -s --filter=web lint`.
 - [x] 4.2 Run `pnpm -s --filter=web check-types`.
 - [x] 4.3 Run `pnpm -s --filter=web build`.
-- [ ] 4.4 Manually verify `/`, `/design-system`, and one `/console/**` page across light/dark.
+- [-] 4.4 Manually verify `/`, `/design-system`, and one `/console/**` page across light/dark.

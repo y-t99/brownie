@@ -12,8 +12,7 @@ export function TopNavigation({ variant = "console" }: { variant?: TopNavigation
   if (variant === "marketing") {
     return (
       <header className="flex flex-col items-center justify-center sticky top-0 z-10 border-b border-surface-border bg-[color:color-mix(in_srgb,rgb(var(--canvas))_85%,transparent)] backdrop-blur-md">
-        <Container>
-          <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between">
+        <Container className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10 flex flex-row w-full justify-between">
             <Link
               href="/"
               className="text-base font-semibold tracking-tight text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
@@ -28,7 +27,6 @@ export function TopNavigation({ variant = "console" }: { variant?: TopNavigation
                 <Link href="/console">Console</Link>
               </Button>
             </nav>
-          </div>
         </Container>
       </header>
     );

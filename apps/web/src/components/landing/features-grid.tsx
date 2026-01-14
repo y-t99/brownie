@@ -54,7 +54,7 @@ export function FeaturesGrid({ title, description, features, layout = "grid" }: 
         initial="hidden"
         animate="show"
         className={cn(
-          "mt-12 grid gap-4",
+          "mt-12 w-full grid gap-6",
           layout === "bento"
             ? "grid-cols-1 md:grid-cols-6"
             : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
@@ -75,7 +75,7 @@ export function FeaturesGrid({ title, description, features, layout = "grid" }: 
               <Card
                 variant="elevated"
                 className={cn(
-                  "h-full transition-[transform,box-shadow] duration-300 ease-out hover:scale-[1.02] hover:shadow-[var(--ms-shadow-elevated-hover)]",
+                  "h-full overflow-hidden transition-[transform,box-shadow] duration-300 ease-out hover:scale-[1.02] hover:shadow-[var(--ms-shadow-elevated-hover)]",
                 )}
               >
                 <CardHeader className="pb-3">
