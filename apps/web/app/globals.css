@@ -1,18 +1,185 @@
-@config "../tailwind.config.ts";
 @import "tailwindcss";
 
+@theme {
+  /* Font families */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Letter spacing */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+
+  /* Border radius */
+  --radius-card-sm: 16px;
+  --radius-card: 20px;
+  --radius-card-lg: 24px;
+  --radius-card-xl: 32px;
+
+  /* Colors - using CSS variables for dynamic theming */
+  --color-canvas: rgb(var(--canvas));
+  --color-canvas-subtle: rgb(var(--canvas-subtle));
+  --color-surface: rgb(var(--surface));
+  --color-surface-border: rgb(var(--surface-border));
+  --color-text-primary: rgb(var(--text-primary));
+  --color-text-secondary: rgb(var(--text-secondary));
+  --color-accent-primary: rgb(var(--accent-primary));
+
+  --color-status-success-bg: rgb(var(--status-success-bg));
+  --color-status-success-text: rgb(var(--status-success-text));
+  --color-status-error-bg: rgb(var(--status-error-bg));
+  --color-status-error-text: rgb(var(--status-error-text));
+  --color-status-pending-bg: rgb(var(--status-pending-bg));
+  --color-status-pending-text: rgb(var(--status-pending-text));
+
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --canvas: 252 252 252;
+  --canvas-subtle: 245 245 245;
+  --surface: 255 255 255;
+  --surface-border: 228 228 228;
+  --text-primary: 0 0 0;
+  --text-secondary: 82 82 82;
+  --accent-primary: 0 0 0;
+
+  --status-success-bg: 236 253 245;
+  --status-success-text: 4 120 87;
+  --status-error-bg: 229 75 79;
+  --status-error-text: 255 255 255;
+  --status-pending-bg: 254 249 195;
+  --status-pending-text: 161 98 7;
+
+  --background: var(--canvas);
+  --foreground: var(--text-primary);
+
+  /* Shadcn/ui theme (Amethyst Haze) - stored as OKLCH triplets */
+  --card-oklch: 1 0 0;
+  --card-foreground-oklch: 0.3651 0.0325 287.0807;
+  --popover-oklch: 1 0 0;
+  --popover-foreground-oklch: 0.3651 0.0325 287.0807;
+  --primary-oklch: 0.6104 0.0767 299.7335;
+  --primary-foreground-oklch: 0.9777 0.0041 301.4256;
+  --secondary-oklch: 0.8957 0.0265 300.2416;
+  --secondary-foreground-oklch: 0.3651 0.0325 287.0807;
+  --muted-oklch: 0.8906 0.0139 299.7754;
+  --muted-foreground-oklch: 0.5288 0.0375 290.7895;
+  --accent-oklch: 0.7889 0.0802 359.9375;
+  --accent-foreground-oklch: 0.3394 0.0441 1.7583;
+  --destructive-oklch: 0.6332 0.1578 22.6734;
+  --destructive-foreground-oklch: 0.9777 0.0041 301.4256;
+  --border-oklch: 0.8447 0.0226 300.1421;
+  --input-oklch: 0.9329 0.0124 301.2783;
+  --ring-oklch: 0.6104 0.0767 299.7335;
+
+  /* Computed OKLCH colors */
+  --card: oklch(var(--card-oklch));
+  --card-foreground: oklch(var(--card-foreground-oklch));
+  --popover: oklch(var(--popover-oklch));
+  --popover-foreground: oklch(var(--popover-foreground-oklch));
+  --primary: oklch(var(--primary-oklch));
+  --primary-foreground: oklch(var(--primary-foreground-oklch));
+  --secondary: oklch(var(--secondary-oklch));
+  --secondary-foreground: oklch(var(--secondary-foreground-oklch));
+  --muted: oklch(var(--muted-oklch));
+  --muted-foreground: oklch(var(--muted-foreground-oklch));
+  --accent: oklch(var(--accent-oklch));
+  --accent-foreground: oklch(var(--accent-foreground-oklch));
+  --destructive: oklch(var(--destructive-oklch));
+  --destructive-foreground: oklch(var(--destructive-foreground-oklch));
+  --border: oklch(var(--border-oklch));
+  --input: oklch(var(--input-oklch));
+  --ring: oklch(var(--ring-oklch));
+
+  /* Micro-skeuomorphism formulas */
+  --ms-ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ms-duration-fast: 200ms;
+  --ms-gradient-primary: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    color-mix(in srgb, var(--primary) 85%, black) 50%,
+    color-mix(in srgb, var(--primary) 70%, black) 100%
+  );
+  --ms-gradient-secondary: linear-gradient(
+    135deg,
+    var(--secondary) 0%,
+    color-mix(in srgb, var(--secondary) 85%, black) 50%,
+    color-mix(in srgb, var(--secondary) 70%, black) 100%
+  );
+  --ms-gradient-accent: linear-gradient(
+    135deg,
+    var(--accent) 0%,
+    color-mix(in srgb, var(--accent) 85%, black) 50%,
+    color-mix(in srgb, var(--accent) 70%, black) 100%
+  );
+  --ms-shadow-elevated: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  --ms-shadow-elevated-hover: 0 8px 20px color-mix(in srgb, var(--primary) 45%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+  --ms-shadow-glow: 0 10px 28px color-mix(in srgb, var(--primary) 55%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+  --ms-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --canvas: 0 0 0;
+    --canvas-subtle: 29 29 29;
+    --surface: 9 9 9;
+    --surface-border: 36 36 36;
+    --text-primary: 255 255 255;
+    --text-secondary: 164 164 164;
+    --accent-primary: 255 255 255;
+
+    --status-success-bg: 6 78 59;
+    --status-success-text: 110 231 183;
+    --status-error-bg: 255 91 91;
+    --status-error-text: 0 0 0;
+    --status-pending-bg: 66 32 6;
+    --status-pending-text: 253 230 138;
+
+    /* Shadcn/ui theme (Amethyst Haze) - dark mode */
+    --card-oklch: 0.2544 0.0301 292.7315;
+    --card-foreground-oklch: 0.9053 0.0245 293.557;
+    --popover-oklch: 0.2544 0.0301 292.7315;
+    --popover-foreground-oklch: 0.9053 0.0245 293.557;
+    --primary-oklch: 0.7058 0.0777 302.0489;
+    --primary-foreground-oklch: 0.2166 0.0215 292.8474;
+    --secondary-oklch: 0.4604 0.0472 295.5578;
+    --secondary-foreground-oklch: 0.9053 0.0245 293.557;
+    --muted-oklch: 0.256 0.032 294.838;
+    --muted-foreground-oklch: 0.6974 0.0282 300.0614;
+    --accent-oklch: 0.3181 0.0321 308.6149;
+    --accent-foreground-oklch: 0.8391 0.0692 2.6681;
+    --destructive-oklch: 0.6875 0.142 21.4566;
+    --destructive-foreground-oklch: 0.2166 0.0215 292.8474;
+    --border-oklch: 0.3063 0.0359 293.3367;
+    --input-oklch: 0.2847 0.0346 291.2726;
+    --ring-oklch: 0.7058 0.0777 302.0489;
   }
 }
 
+/* Base styles */
 html,
 body {
   max-width: 100vw;
@@ -20,8 +187,9 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: rgb(var(--foreground));
+  background-color: rgb(var(--background));
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 * {
@@ -35,19 +203,61 @@ a {
   text-decoration: none;
 }
 
-.imgDark {
-  display: none;
-}
-
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
+}
 
-  .imgLight {
-    display: none;
+/* Utilities */
+@keyframes accordion-down {
+  from {
+    height: 0;
   }
-  .imgDark {
-    display: unset;
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 200ms ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 200ms ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Accessibility: honor reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

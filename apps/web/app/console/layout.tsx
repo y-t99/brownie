@@ -12,5 +12,9 @@ export default function ConsoleRootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <Providers>{children}</Providers>;
+  return (
+    <Providers>
+      <main className="min-h-dvh">{children}</main>
+    </Providers>
+  );
 }

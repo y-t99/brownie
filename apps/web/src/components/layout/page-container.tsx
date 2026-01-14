@@ -1,6 +1,9 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
-export function PageContainer({ children }: { children: ReactNode }) {
-  return <main className="mx-auto max-w-6xl px-8">{children}</main>;
+import { cn } from "@/lib/cn";
+
+import { Container } from "./container";
+
+export function PageContainer({ children, className }: { children: ReactNode, className?: string }) {
+  return <Container className={cn("py-16 sm:py-20 md:py-28 lg:py-32", className)}>{children}</Container>;
 }
-

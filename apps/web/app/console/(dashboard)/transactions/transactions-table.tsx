@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Sheet,
   SheetClose,
@@ -23,7 +24,7 @@ import {
 } from "@/components/ui/table";
 import { CodeBlock } from "@/components/util/code-block";
 import { CopyButton } from "@/components/util/copy-button";
-import { StatusIndicator, TaskStatus } from "@/components/util/status-indicator";
+import { TaskStatus } from "@/components/util/status-indicator";
 import { cn } from "@/lib/cn";
 
 type Transaction = {
@@ -132,7 +133,7 @@ export function TransactionsTable() {
   const selected = transactions.find((t) => t.id === selectedId) ?? null;
 
   return (
-    <div className="rounded-2xl border border-surface-border bg-surface">
+    <Card variant="elevated" className="overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow>
@@ -148,7 +149,7 @@ export function TransactionsTable() {
           {transactions.map((t) => (
             <TableRow key={t.id}>
               <TableCell>
-                <StatusIndicator status={t.status} />
+                <Badge variant={badgeVariantForStatus(t.status)}>{t.status}</Badge>
               </TableCell>
               <TableCell className="font-mono text-sm text-text-primary">
                 {shortId(t.id)}
@@ -252,6 +253,6 @@ export function TransactionsTable() {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </Card>
   );
 }

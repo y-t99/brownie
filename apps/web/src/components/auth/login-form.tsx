@@ -3,6 +3,10 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -10,6 +14,7 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const hasError = Boolean(error);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -34,52 +39,41 @@ export function LoginForm() {
   return (
     <form className="space-y-4" onSubmit={onSubmit}>
       <div className="space-y-2">
-        <label className="text-sm font-medium text-text-primary" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="h-11 w-full rounded-xl border border-surface-border bg-canvas px-4 text-sm text-text-primary outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/30"
+        <Label htmlFor="email">Email</Label>
+        <Input
           id="email"
           name="email"
           type="email"
           autoComplete="email"
           value={email}
+          aria-invalid={hasError && !email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
       </div>
       <div className="space-y-2">
-        <label
-          className="text-sm font-medium text-text-primary"
-          htmlFor="password"
-        >
-          Password
-        </label>
-        <input
-          className="h-11 w-full rounded-xl border border-surface-border bg-canvas px-4 text-sm text-text-primary outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/30"
+        <Label htmlFor="password">Password</Label>
+        <Input
           id="password"
           name="password"
           type="password"
           autoComplete="current-password"
           value={password}
+          aria-invalid={hasError && !password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
       </div>
 
       {error ? (
-        <p className="rounded-xl bg-status-error-bg px-4 py-3 text-sm text-status-error-text">
+        <p className="rounded-card-sm bg-status-error-bg px-4 py-3 text-sm text-status-error-text">
           {error}
         </p>
       ) : null}
 
-      <button
-        className="h-11 w-full rounded-xl bg-text-primary text-sm font-medium text-canvas hover:bg-text-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/30 disabled:cursor-not-allowed disabled:opacity-60"
-        disabled={isSubmitting}
-        type="submit"
-      >
+      <Button className="w-full" disabled={isSubmitting} type="submit">
         {isSubmitting ? "Signing in…" : "Sign in"}
-      </button>
+      </Button>
     </form>
   );
 }
