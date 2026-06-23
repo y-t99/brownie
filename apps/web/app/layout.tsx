@@ -13,8 +13,13 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Brownie",
-  description: "Durable task execution with a clean developer experience.",
+  title: "Inkling",
+  description: "A calm workspace for thinking, writing, and chatting.",
+  icons: {
+    icon: "/inkling-icon.png",
+    shortcut: "/inkling-icon.png",
+    apple: "/inkling-icon.png",
+  },
 };
 
 export default function RootLayout({

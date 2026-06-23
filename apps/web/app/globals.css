@@ -111,9 +111,11 @@
   --input: oklch(var(--input-oklch));
   --ring: oklch(var(--ring-oklch));
 
-  /* Micro-skeuomorphism formulas */
+  /* Micro-morphism design system - Motion */
   --ms-ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
   --ms-duration-fast: 200ms;
+
+  /* Micro-morphism design system - Gradients */
   --ms-gradient-primary: linear-gradient(
     135deg,
     var(--primary) 0%,
@@ -132,13 +134,31 @@
     color-mix(in srgb, var(--accent) 85%, black) 50%,
     color-mix(in srgb, var(--accent) 70%, black) 100%
   );
-  --ms-shadow-elevated: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-  --ms-shadow-elevated-hover: 0 8px 20px color-mix(in srgb, var(--primary) 45%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+
+  /* Micro-morphism design system - Three-layer Shadow System (Section 3.2) */
+  /* Default state: outer shadow + top highlight + bottom dark edge */
+  --ms-shadow-3d: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+
+  /* Hover state: light source closer, larger shadow, enhanced highlight */
+  --ms-shadow-3d-hover: 0 6px 20px color-mix(in srgb, var(--primary) 45%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+
+  /* Glow state: for premium/highlight elements */
   --ms-shadow-glow: 0 10px 28px color-mix(in srgb, var(--primary) 55%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 0 rgba(0, 0, 0, 0.12);
-  --ms-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+
+  /* Inset state: for input fields, inactive tracks */
+  --ms-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.06),
+    inset 0 1px 1px rgba(0, 0, 0, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.1);
+
+  /* Backwards-compat variables (do not remove until all usages are migrated) */
+  --ms-shadow-elevated: var(--ms-shadow-3d);
+  --ms-shadow-elevated-hover: var(--ms-shadow-3d-hover);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -194,8 +214,6 @@ body {
 
 * {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 a {
@@ -260,4 +278,15 @@ a {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Micro-morphism utility classes */
+.shadow-micro-3d {
+  box-shadow: var(--ms-shadow-3d);
+}
+.shadow-micro-hover {
+  box-shadow: var(--ms-shadow-3d-hover);
+}
+.shadow-micro-inner {
+  box-shadow: var(--ms-shadow-inset);
 }

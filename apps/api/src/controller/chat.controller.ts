@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Req, Sse } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  Sse,
+} from "@nestjs/common";
 import { UserContent } from "ai";
 
 import { ChatService, ChatStreamService } from "../service";
@@ -11,12 +20,30 @@ export class ChatController {
     private readonly chatStreamService: ChatStreamService,
   ) {}
 
+  @Post("session")
+  async createUserChatSession(@Req() req: AuthRequest) {
+    return this.chatService.createChatSession(req.user.uuid);
+  }
+
+  @Get("session")
+  async userChatSessionList(@Req() req: AuthRequest) {
+    return this.chatService.userChatSessionList(req.user.uuid);
+  }
+
   @Get("session/:sessionUuid")
   async userChatSessionDetail(
     @Req() req: AuthRequest,
     @Param("sessionUuid") sessionUuid: string,
   ) {
     return this.chatService.userChatSessionDetail(req.user.uuid, sessionUuid);
+  }
+
+  @Delete("session/:sessionUuid")
+  async deleteUserChatSession(
+    @Req() req: AuthRequest,
+    @Param("sessionUuid") sessionUuid: string,
+  ) {
+    return this.chatService.deleteUserChatSession(req.user.uuid, sessionUuid);
   }
 
   @Post("session/:sessionUuid/message")

@@ -2,6 +2,7 @@ import { tasks } from "@brownie/task";
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   ServiceUnavailableException,
 } from "@nestjs/common";
 import { ChatMessageBlock, Prisma } from "@prisma/client";
@@ -32,6 +33,44 @@ export class ChatService {
     });
 
     return chatSession;
+  }
+
+  async userChatSessionList(userId: string) {
+    return this.prisma.chatSession.findMany({
+      where: {
+        created_by: userId,
+        deleted: false,
+      },
+      orderBy: {
+        updated_at: Prisma.SortOrder.desc,
+      },
+    });
+  }
+
+  async deleteUserChatSession(userId: string, sessionUuid: string) {
+    const chatSession = await this.prisma.chatSession.findUnique({
+      where: {
+        uuid: sessionUuid,
+        created_by: userId,
+        deleted: false,
+      },
+    });
+
+    if (!chatSession) {
+      throw new NotFoundException();
+    }
+
+    await this.prisma.chatSession.update({
+      where: {
+        uuid: sessionUuid,
+      },
+      data: {
+        deleted: true,
+        updated_by: userId,
+      },
+    });
+
+    return { ok: true };
   }
 
   async submitInstruction(
@@ -74,46 +113,6 @@ export class ChatService {
           },
         });
       }
-
-      const task = await tx.task.create({
-        data: {
-          uuid: generateUUID(UUIDType.TASK),
-          title: Agent.FRONT_OFFICE_ASSISTANT,
-          meta: {},
-          payload: {},
-          status: TaskStatus.PENDING as string,
-          created_by: userId,
-          updated_by: userId,
-        },
-      });
-
-      tx.taskResourceRelation.create({
-        data: {
-          uuid: generateUUID(UUIDType.TASK_RESOURCE_RELATION),
-          task_uuid: task.uuid,
-          resource_type: TaskResourceType.CHAT_MESSAGE,
-          resource_uuid: chatMessage.uuid,
-          created_by: userId,
-          updated_by: userId,
-        },
-      });
-
-      const payload = {
-        chat_session_uuid: sessionUuid,
-        chat_message_uuid: chatMessage.uuid,
-      };
-
-      const handle = await tasks.trigger(Agent.FRONT_OFFICE_ASSISTANT, payload);
-
-      await tx.task.update({
-        where: {
-          uuid: task.uuid,
-        },
-        data: {
-          meta: { handle_id: handle.id },
-          payload: payload,
-        },
-      });
     });
 
     return;
@@ -258,5 +257,4 @@ export class ChatService {
     }
   }
 
-  async contextCuration(filters: unknown) {}
 }

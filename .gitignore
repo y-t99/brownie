@@ -38,3 +38,8 @@ yarn-error.log*
 *.pem
 
 .trigger
+
+.codex
+.agents
+.claude
+.cursor

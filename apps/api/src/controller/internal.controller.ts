@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Controller, Get, Param, Post } from "@nestjs/common";
 
 import { Roles } from "../decorator";
 import { Role } from "../enum";
@@ -23,16 +23,7 @@ export class InternalController {
   }
 
   @Post("context/curation")
-  async contextCuration(
-    @Body()
-    body: {
-      userUuid: string;
-      sessionUuid?: string;
-      messageUuid?: string;
-      memoryType?: string;
-      queries?: string[];
-    },
-  ) {
-    return this.chatService.contextCuration(body);
+  async contextCuration() {
+    return;
   }
 }
